@@ -37,3 +37,25 @@ pub struct ProgramConfigInit<'info> {
 
     pub system_program: Program<'info, System>,
 }
+impl<'info> ProgramConfigInit<'info> {
+    pub fn program_config_init(
+        ctx: Context<ProgramConfigInit>,
+        args: ProgramConfigInitArgs,
+    ) -> Result<()> {
+        let owner = ctx.accounts.initializer.key();
+        let creator_key = args.creator_key;
+        let _reserved: [u8;64] = [0u8; 64];
+        let bump = ctx.bumps.program_config;
+
+        ctx.accounts.program_config.set_inner( ProgramConfig {
+            owner,
+            creator_key,
+            _reserved,
+            bump,
+        });
+
+        ctx.accounts.program_config.invariant()?;
+
+        Ok(())
+    }
+}

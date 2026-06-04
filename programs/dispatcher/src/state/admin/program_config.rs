@@ -12,6 +12,9 @@ pub struct ProgramConfig {
 
     /// Transaction fee in lamports
     /// pub transaction_fee: u64,
+    
+    /// Treasury for transactions fee
+    /// pub treasury: Pubkey
 
     /// For future fields
     pub _reserved: [u8; 64],
