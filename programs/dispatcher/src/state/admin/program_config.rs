@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::error;
+use crate::error::*;
 
 #[account]
 #[derive(InitSpace)]
@@ -28,19 +28,19 @@ impl ProgramConfig {
         require_keys_neq!(
             self.owner,
             Pubkey::default(),
-            error::ErrorCode::InvalidAccount,
+            DispatcherError::InvalidAccount,
         );
 
         require_keys_neq!(
             self.creator_key,
             Pubkey::default(),
-            error::ErrorCode::InvalidAccount,
+            DispatcherError::InvalidAccount,
         );
         
         require_keys_neq!(
             self.owner,
             self.creator_key,
-            error::ErrorCode::InvalidAccount,
+            DispatcherError::InvalidAccount,
         );
 
         Ok(())

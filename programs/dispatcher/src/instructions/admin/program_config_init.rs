@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use crate::state::admin::*;
 use crate::constants::*;
-use crate::error;
+use crate::error::*;
 
 #[cfg(not(feature = "testing"))]
 const INITIALIZER: Pubkey = pubkey!("GtmrJehR49tXwFh7W4x2kGy61czbEboYSkHQDJw7Ggeb");
@@ -19,7 +19,7 @@ pub struct ProgramConfigInit<'info> {
     #[account(
         mut,
         address = INITIALIZER @
-            error::ErrorCode::InvalidAccount,
+            DispatcherError::InvalidAccount,
     )]
     pub initializer: Signer<'info>,
 
