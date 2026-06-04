@@ -6,13 +6,16 @@ use crate::constants::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct DispatcherInitArgs {
+    /// Authority that can update Duspatcher state
     pub authority: Pubkey,
 
+    /// Key that can init subsidiary accounts
     pub creator_key: Pubkey,
 }
 
 #[derive(Accounts)]
 pub struct DispatcherInit<'info> {
+    /// Key from ProgramConfig
     #[account(mut)]
     pub creator_key: Signer<'info>,
 
@@ -30,6 +33,7 @@ pub struct DispatcherInit<'info> {
     )]
     pub dispatcher: Account<'info, Dispatcher>,
 
+    /// Need only for Dispatcher PDA seeds; not used for anything else
     #[account(
         has_one = creator_key
             @ DispatcherError::Unauthorized,
@@ -44,7 +48,7 @@ pub struct DispatcherInit<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl<'info> DispatcherInit<'info> {
+impl DispatcherInit<'_> {
     /// A one-time instruction that initializes the global dispatcher.
     pub fn dispatcher_init(
         ctx: Context<Self>,
