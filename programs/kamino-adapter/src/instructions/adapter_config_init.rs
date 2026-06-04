@@ -38,6 +38,17 @@ impl AdapterConfigInit<'_> {
         ctx: Context<Self>,
         args: AdapterConfigInitArgs,
     ) -> Result<()> {
+        let authority = args.authority;
+        let creator_key = args.creator_key;
+        let bump = ctx.bumps.adapter_config;
+
+        ctx.accounts.adapter_config.set_inner( AdapterConfig {
+            authority,
+            creator_key,
+            bump,
+        });
+
+        ctx.accounts.adapter_config.invariant()?;
 
         Ok(())
     }
