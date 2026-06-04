@@ -4,4 +4,7 @@ use anchor_lang::prelude::*;
 pub enum ErrorCode {
     #[msg("InvalidAccount")]  // 6000
     InvalidAccount,
+
+    #[msg("Unauthorized")]    // 6001
+    Unauthorized,
 }

@@ -1,4 +1,4 @@
 use anchor_lang::prelude::*;
 
-#[constant]
-pub const SEED: &str = "anchor";
+pub const SEED_PREFIX: &[u8] = b"dispatcher";
+pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config"; 
