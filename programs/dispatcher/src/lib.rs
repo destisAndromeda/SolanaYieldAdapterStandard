@@ -29,5 +29,16 @@ pub mod dispatcher {
             program_config_init(ctx, args)
     }
 
-
+    /// Initializes the dispatcher account.
+    ///
+    /// Can only be called by the `creator_key` stored in `ProgramConfig`.
+    /// The dispatcher acts as the routing layer between the standard interface
+    /// and the underlying yield protocol adapters.
+    pub fn dispatcher_init(
+        ctx: Context<DispatcherInit>,
+        args: DispatcherInitArgs,
+    ) -> Result<()> {
+        DispatcherInit::
+            dispatcher_init(ctx, args)
+    }
 }
