@@ -7,7 +7,6 @@ skip-lint = false
 
 [programs.localnet]
 dispatcher = "2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU"
-solana_yield_adapter_standard = "BJoC4sd4adGsg4QXy1NX9PxTcYM3froGgW7mddKuwaye"
 
 [provider]
 cluster = "localnet"
