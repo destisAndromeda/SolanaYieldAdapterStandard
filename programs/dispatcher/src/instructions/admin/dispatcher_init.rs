@@ -45,6 +45,7 @@ pub struct DispatcherInit<'info> {
 }
 
 impl<'info> DispatcherInit<'info> {
+    /// A one-time instruction that initializes the global dispatcher.
     pub fn dispatcher_init(
         ctx: Context<Self>,
         args: DispatcherInitArgs,

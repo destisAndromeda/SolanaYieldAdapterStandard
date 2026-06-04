@@ -3,6 +3,8 @@ use crate::state::admin::*;
 use crate::constants::*;
 use crate::error::*;
 
+/// This key is intended to use for the single transaction that initializes the global program config
+/// It is not used for anything else.
 #[cfg(not(feature = "testing"))]
 const INITIALIZER: Pubkey = pubkey!("GtmrJehR49tXwFh7W4x2kGy61czbEboYSkHQDJw7Ggeb");
 
@@ -11,11 +13,13 @@ const INITIALIZER: Pubkey = pubkey!("GAe1b8H1eUQhGuwAEJKstXLFdpaoHp9voszu1uw46Ht
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct ProgramConfigInitArgs {
+    /// Key that can init subsidiary accounts
     pub creator_key: Pubkey,
 }
 
 #[derive(Accounts)]
 pub struct ProgramConfigInit<'info> {
+    /// The hard-coded account that is used to initialize the program config once
     #[account(
         mut,
         address = INITIALIZER @
@@ -38,6 +42,7 @@ pub struct ProgramConfigInit<'info> {
     pub system_program: Program<'info, System>,
 }
 impl<'info> ProgramConfigInit<'info> {
+    /// A one-time instruction that initializes the global program config.
     pub fn program_config_init(
         ctx: Context<Self>,
         args: ProgramConfigInitArgs,
