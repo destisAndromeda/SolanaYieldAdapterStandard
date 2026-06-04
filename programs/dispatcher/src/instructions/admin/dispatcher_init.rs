@@ -43,3 +43,40 @@ pub struct DispatcherInit<'info> {
 
     pub system_program: Program<'info, System>,
 }
+
+impl<'info> DispatcherInit<'info> {
+    fn validate(&self, args: &DispatcherInitArgs) -> Result<()> {
+        let Self {
+            creator_key,
+            ..
+        } = self;
+
+        require_keys_neq!(
+            creator_key.key(),
+            args.creator_key,
+            DispatcherError::InvalidAccount,
+        );
+
+        Ok(())
+    }
+
+    #[access_control(ctx.accounts.validate(&args))]
+    pub fn dispatcher_init(
+        ctx: Context<Self>,
+        args: DispatcherInitArgs,
+    ) -> Result<()> {
+        let creator_key = args.creator_key;
+        let authority   = args.authority;
+        let bump = ctx.bumps.dispatcher;
+        
+        ctx.accounts.dispatcher.set_inner( Dispatcher {
+            authority,
+            creator_key,
+            bump,
+        });
+
+        ctx.accounts.dispatcher.invariant()?;
+
+        Ok(())
+    }
+}
