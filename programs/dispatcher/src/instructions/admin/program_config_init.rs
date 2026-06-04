@@ -41,7 +41,7 @@ pub struct ProgramConfigInit<'info> {
 
     pub system_program: Program<'info, System>,
 }
-impl<'info> ProgramConfigInit<'info> {
+impl ProgramConfigInit<'_> {
     /// A one-time instruction that initializes the global program config.
     pub fn program_config_init(
         ctx: Context<Self>,
