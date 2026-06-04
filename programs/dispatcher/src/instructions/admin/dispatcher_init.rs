@@ -45,22 +45,6 @@ pub struct DispatcherInit<'info> {
 }
 
 impl<'info> DispatcherInit<'info> {
-    fn validate(&self, args: &DispatcherInitArgs) -> Result<()> {
-        let Self {
-            creator_key,
-            ..
-        } = self;
-
-        require_keys_neq!(
-            creator_key.key(),
-            args.creator_key,
-            DispatcherError::InvalidAccount,
-        );
-
-        Ok(())
-    }
-
-    #[access_control(ctx.accounts.validate(&args))]
     pub fn dispatcher_init(
         ctx: Context<Self>,
         args: DispatcherInitArgs,
