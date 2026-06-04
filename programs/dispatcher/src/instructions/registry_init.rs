@@ -59,3 +59,27 @@ pub struct RegistryInit<'info> {
 
     pub system_program: Program<'info, System>,
 }
+
+impl RegistryInit<'_> {
+    /// A one-time instruction that initializes the global registry
+    pub fn registry_init(
+        ctx: Context<Self>,
+        args: RegistryInitArgs,
+    ) -> Result<()> {
+        let creator_key = args.creator_key;
+        let authority   = args.authority;
+        let adapters_index = 0;
+        let bump = ctx.bumps.registry;
+
+        ctx.accounts.registry.set_inner( Registry {
+            authority,
+            creator_key,
+            adapters_index,
+            bump,
+        });
+
+        ctx.accounts.registry.invariant()?;
+
+        Ok(())
+    }
+}
