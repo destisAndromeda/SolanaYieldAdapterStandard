@@ -39,7 +39,7 @@ pub struct ProgramConfigInit<'info> {
 }
 impl<'info> ProgramConfigInit<'info> {
     pub fn program_config_init(
-        ctx: Context<ProgramConfigInit>,
+        ctx: Context<Self>,
         args: ProgramConfigInitArgs,
     ) -> Result<()> {
         let owner = ctx.accounts.initializer.key();
