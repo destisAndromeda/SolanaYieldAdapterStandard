@@ -39,4 +39,17 @@ pub mod dispatcher {
         DispatcherInit::
             dispatcher_init(ctx, args)
     }
+
+    /// Initializes the adapter registry account.
+    ///
+    /// Can only be called by the `creator_key` stored in `Dispatcher`.
+    /// The registry governs which adapters are approved for use
+    /// and controls who can register new adapters.
+    pub fn registry_init(
+        ctx: Context<RegistryInit>,
+        args: RegistryInitArgs,
+    ) -> Result<()> {
+        RegistryInit::
+            registry_init(ctx, args)
+    }
 }
