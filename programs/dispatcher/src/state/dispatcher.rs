@@ -4,10 +4,13 @@ use crate::error::*;
 #[account]
 #[derive(InitSpace)]
 pub struct Dispatcher {
+    /// Authority that can update account state
     pub authority: Pubkey,
 
+    /// For subsidiary PDA seeds
     pub creator_key: Pubkey,
 
+    /// Bump for ProgramConfig PDA seeds
     pub bump: u8,
 }
 
