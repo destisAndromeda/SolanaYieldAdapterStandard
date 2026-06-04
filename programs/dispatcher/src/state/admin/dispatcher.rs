@@ -15,6 +15,18 @@ impl Dispatcher {
     pub fn invariant(&self) -> Result<()> {
         require_keys_neq!(
             self.authority,
+            Pubkey::default(),
+            DispatcherError::InvalidAccount,
+        );
+
+        require_keys_neq!(
+            self.creator_key,
+            Pubkey::default(),
+            DispatcherError::InvalidAccount,
+        );
+
+        require_keys_neq!(
+            self.authority,
             self.creator_key,
             DispatcherError::InvalidAccount,
         );
