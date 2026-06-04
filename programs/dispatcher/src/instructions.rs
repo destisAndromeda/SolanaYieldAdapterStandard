@@ -1,3 +1,5 @@
-pub mod admin;
+pub mod dispatcher_init;
+pub mod program_config_init;
 
-pub use admin::*;
+pub use dispatcher_init::*;
+pub use program_config_init::*;
