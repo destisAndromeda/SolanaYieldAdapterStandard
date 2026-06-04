@@ -1,3 +1,3 @@
-pub mod initialize;
+pub mod adapter_config_init;
 
-pub use initialize::*;
+pub use adapter_config_init::*;
