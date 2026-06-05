@@ -44,23 +44,25 @@ pub struct KaminoAdapterInit<'info> {
     pub system_program: Program<'info, System>,
 }
 
-// impl KaminoAdapterInit<'_> {
-//     pub fn adapter_config_init(
-//         ctx: Context<Self>,
-//         args: KaminoAdapterInitArgs,
-//     ) -> Result<()> {
-//         let authority = args.authority;
-//         let creator_key = args.creator_key;
-//         let bump = ctx.bumps.adapter_config;
+impl KaminoAdapterInit<'_> {
+    pub fn adapter_config_init(
+        ctx: Context<Self>,
+        args: KaminoAdapterInitArgs,
+    ) -> Result<()> {
+        let authority = args.authority;
+        let creator_key = args.creator_key;
+        let instruction_index = 0;
+        let bump = ctx.bumps.kamino_adapter;
 
-//         ctx.accounts.adapter_config.set_inner( KaminoAdapter {
-//             authority,
-//             creator_key,
-//             bump,
-//         });
+        ctx.accounts.adapter_config.set_inner( KaminoAdapter {
+            authority,
+            creator_key,
+            instruction_index,
+            bump,
+        });
 
-//         ctx.accounts.adapter_config.invariant()?;
+        ctx.accounts.adapter_config.invariant()?;
 
-//         Ok(())
-//     }
-// }
+        Ok(())
+    }
+}
