@@ -15,6 +15,10 @@ declare_id!("BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT");
 pub mod kamino_adapter {
     use super::*;
 
+    /// Initializes the adapter configuration account.
+    ///
+    /// Acts as the root of the adapter hierarchy. Controls who can
+    /// register new adapters under this configuration.
     pub fn adapter_config_init(
         ctx: Context<AdapterConfigInit>,
         args: AdapterConfigInitArgs,
@@ -23,6 +27,10 @@ pub mod kamino_adapter {
             adapter_config_init(ctx, args)
     }
 
+    /// Initializes a Kamino adapter account.
+    ///
+    /// Registers Kamino Finance as a yield protocol adapter under
+    /// the adapter configuration.
     pub fn kamino_adapter_init(
         ctx: Context<KaminoAdapterInit>,
         args: KaminoAdapterInitArgs,
