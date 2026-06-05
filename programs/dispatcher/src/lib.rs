@@ -47,6 +47,29 @@ pub mod dispatcher {
     ) -> Result<()> {
         Deposit::deposit(ctx, args)
     }
-
     
+    /// Routes a USDC withdrawal from the specified adapter via CPI.
+    ///
+    /// Validates that the adapter is active, then forwards the call
+    /// to the adapter program using the standardized `adapter_withdraw`
+    /// discriminator. All protocol-specific accounts are passed
+    /// through `remaining_accounts`.
+    pub fn withdraw(
+        ctx: Context<Withdraw>,
+        args: WithdrawArgs,
+    ) -> Result<()> {
+        Withdraw::withdraw(ctx, args)
+    }
+
+    /// Queries the current value of a user's position in the specified adapter.
+    ///
+    /// Returns the total USDC value including accrued interest via `msg!`.
+    /// This instruction can be simulated off-chain at no cost using
+    /// `simulateTransaction` to read the current position without paying fees.
+    pub fn current_value(
+        ctx: Context<CurrentValue>,
+        args: CurrentValueArgs,
+    ) -> Result<()> {
+        CurrentValue::current_value(ctx, args)
+    }
 }
