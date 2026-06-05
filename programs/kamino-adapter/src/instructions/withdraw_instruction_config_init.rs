@@ -4,26 +4,26 @@ use crate::error::*;
 use crate::constants::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct DepositInstructionConfigInitArgs {
+pub struct WithdrawInstructionConfigInitArgs {
     pub lending_market: Pubkey,
     pub lending_market_authority: Pubkey,
-    pub reserve: Pubkey,
+    pub withdraw_reserve: Pubkey,
     pub reserve_liquidity_mint: Pubkey,
-    pub reserve_liquidity_supply: Pubkey,
+    pub reserve_source_collateral: Pubkey,
     pub reserve_collateral_mint: Pubkey,
-    pub reserve_destination_deposit_collateral: Pubkey,
+    pub reserve_liquidity_supply: Pubkey,
     pub kamino_program_id: Pubkey,
 }
 
 #[derive(Accounts)]
-pub struct DepositInstructionConfigInit<'info> {
+pub struct WithdrawInstructionConfigInit<'info> {
     #[account(mut)]
-    pub creator_key: Signer<'info>, 
+    pub creator_key: Signer<'info>,
 
     #[account(
         init,
         payer = creator_key,
-        space = 8 + DepositInstructionConfig::INIT_SPACE,
+        space = 8 + WithdrawInstructionConfig::INIT_SPACE,
         seeds = [
             SEED_PREFIX,
             kamino_adapter.key().as_ref(),
@@ -32,7 +32,7 @@ pub struct DepositInstructionConfigInit<'info> {
         ],
         bump,
     )]
-    pub deposit_instruction_config: Account<'info, DepositInstructionConfig>,
+    pub withdraw_instruction_config: Account<'info, WithdrawInstructionConfig>,
 
     #[account(
         has_one = creator_key @
@@ -59,36 +59,37 @@ pub struct DepositInstructionConfigInit<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl DepositInstructionConfigInit<'_> {
-    pub fn deposit_instruction_config_init(
+impl WithdrawInstructionConfigInit<'_> {
+    pub fn withdraw_instruction_config_init(
         ctx: Context<Self>,
-        args: DepositInstructionConfigInitArgs,
+        args: WithdrawInstructionConfigInitArgs,
     ) -> Result<()> {
         let authority = ctx.accounts.creator_key.key();
 
         let lending_market = args.lending_market;
         let lending_market_authority = args.lending_market_authority;
-        let reserve = args.reserve;
+        let withdraw_reserve = args.withdraw_reserve;
         let reserve_liquidity_mint = args.reserve_liquidity_mint;
-        let reserve_liquidity_supply = args.reserve_liquidity_supply;
+        let reserve_source_collateral = args.reserve_source_collateral;
         let reserve_collateral_mint = args.reserve_collateral_mint;
-        let reserve_destination_deposit_collateral = args.reserve_destination_deposit_collateral;
+        let reserve_liquidity_supply = args.reserve_liquidity_supply;
         let kamino_program_id = args.kamino_program_id;
-        
-        let bump = ctx.bumps.deposit_instruction_config;
 
-        ctx.accounts.deposit_instruction_config.set_inner( DepositInstructionConfig {
+        let bump = ctx.bumps.withdraw_instruction_config;
+
+        ctx.accounts.withdraw_instruction_config.set_inner(WithdrawInstructionConfig {
             authority,
             lending_market,
             lending_market_authority,
-            reserve,
+            withdraw_reserve,
             reserve_liquidity_mint,
-            reserve_liquidity_supply,
+            reserve_source_collateral,
             reserve_collateral_mint,
-            reserve_destination_deposit_collateral,
+            reserve_liquidity_supply,
             kamino_program_id,
             bump,
         });
+
         Ok(())
     }
 }

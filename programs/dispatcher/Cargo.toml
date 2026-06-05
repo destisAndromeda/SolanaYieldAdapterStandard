@@ -23,6 +23,8 @@ testing = []
 
 [dependencies]
 anchor-lang = "1.0.2"
+spl-associated-token-account = "1.1.1"
+spl-token = "3.5.0"
 
 
 [lints.rust]

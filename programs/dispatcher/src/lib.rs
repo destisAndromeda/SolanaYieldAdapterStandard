@@ -52,4 +52,22 @@ pub mod dispatcher {
         RegistryInit::
             registry_init(ctx, args)
     }
+
+    /// Registers a new adapter in the dispatcher registry.
+    pub fn adapter_info_init(
+        ctx: Context<AdapterInfoInit>,
+        args: AdapterInfoInitArgs,
+    ) -> Result<()> {
+        AdapterInfoInit::
+            adapter_info_init(ctx, args)
+    }
+
+    /// Deposits through the selected adapter.
+    pub fn dispatcher_deposit(
+        ctx: Context<DispatcherDeposit>,
+        args: DispatcherDepositArgs,
+    ) -> Result<()> {
+        DispatcherDeposit::
+            dispatcher_deposit(ctx, args)
+    }
 }

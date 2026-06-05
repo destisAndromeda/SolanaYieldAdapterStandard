@@ -1,0 +1,33 @@
+use anchor_lang::prelude::*;
+use crate::error::*;
+
+#[account]
+#[derive(InitSpace)]
+pub struct AdapterInfo {
+    /// Authority that can manage this adapter entry
+    pub authority: Pubkey,
+
+    /// Program id for the adapter
+    pub adapter_program_id: Pubkey,
+
+    /// PDA bump
+    pub bump: u8,
+}
+
+impl AdapterInfo {
+    pub fn invariant(&self) -> Result<()> {
+        require_keys_neq!(
+            self.authority,
+            Pubkey::default(),
+            DispatcherError::InvalidAccount,
+        );
+
+        require_keys_neq!(
+            self.adapter_program_id,
+            Pubkey::default(),
+            DispatcherError::InvalidAccount,
+        );
+
+        Ok(())
+    }
+}
