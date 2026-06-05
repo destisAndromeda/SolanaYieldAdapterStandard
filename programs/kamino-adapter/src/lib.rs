@@ -22,4 +22,12 @@ pub mod kamino_adapter {
         AdapterConfigInit::
             adapter_config_init(ctx, args)
     }
+
+    pub fn kamino_adapter_init(
+        ctx: Context<KaminoAdapterInit>,
+        args: KaminoAdapterInitArgs,
+    ) -> Result<()> {
+        KaminoAdapterInit::
+            kamino_adapter_init(ctx, args)
+    }
 }

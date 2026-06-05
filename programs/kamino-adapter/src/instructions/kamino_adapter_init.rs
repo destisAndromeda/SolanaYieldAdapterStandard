@@ -45,7 +45,7 @@ pub struct KaminoAdapterInit<'info> {
 }
 
 impl KaminoAdapterInit<'_> {
-    pub fn adapter_config_init(
+    pub fn kamino_adapter_init(
         ctx: Context<Self>,
         args: KaminoAdapterInitArgs,
     ) -> Result<()> {
