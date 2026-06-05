@@ -10,6 +10,9 @@ pub struct Adapter {
     /// Program id for the adapter
     pub program_id: Pubkey,
 
+    /// Enable to use Adapter account if true
+    pub is_active: bool,
+
     /// PDA bump
     pub bump: u8,
 }

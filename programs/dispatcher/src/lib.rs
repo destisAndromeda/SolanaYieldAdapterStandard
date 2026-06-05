@@ -24,8 +24,7 @@ pub mod dispatcher {
         ctx: Context<RegistryInit>,
         args: RegistryInitArgs,
     ) -> Result<()> {
-        RegistryInit::
-            registry_init(ctx, args)
+        RegistryInit::registry_init(ctx, args)
     }
 
     /// Registers a new adapter in the dispatcher registry.
@@ -33,7 +32,21 @@ pub mod dispatcher {
         ctx: Context<AdapterInit>,
         args: AdapterInitArgs,
     ) -> Result<()> {
-        AdapterInit::
-            adapter_info_init(ctx, args)
+        AdapterInit::adapter_info_init(ctx, args)
     }
+    
+    // Routes a USDC deposit to the specified adapter via CPI.
+    ///
+    /// Validates that the adapter is active, then forwards the call
+    /// to the adapter program using the standardized `adapter_deposit`
+    /// discriminator. All protocol-specific accounts are passed
+    /// through `remaining_accounts`.
+    pub fn deposit(
+        ctx: Context<Deposit>,
+        args: DepositArgs,
+    ) -> Result<()> {
+        Deposit::deposit(ctx, args)
+    }
+
+    
 }

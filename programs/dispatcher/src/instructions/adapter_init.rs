@@ -8,6 +8,9 @@ use crate::state::*;
 pub struct AdapterInitArgs {
     /// Adapter program id that will receive CPI requests.
     pub program_id: Pubkey,
+
+    /// Enable to use Adapter account if true
+    pub is_active: bool,
 }
 
 #[derive(Accounts)]
@@ -49,14 +52,15 @@ impl AdapterInit<'_> {
     ) -> Result<()> {
         let authority = ctx.accounts.authority.key();
         let program_id = args.program_id;
+        let is_active = args.is_active;
         let bump = ctx.bumps.adapter_info;
 
         ctx.accounts.adapter_info.set_inner(Adapter {
             authority,
             program_id,
+            is_active,
             bump,
         });
-
 
         ctx.accounts.registry.adapter_index =
             ctx.accounts.registry.adapter_index.checked_add(1)

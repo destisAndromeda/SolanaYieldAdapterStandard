@@ -10,4 +10,7 @@ pub enum DispatcherError {
 
     #[msg("Overflow")]        // 6002
     Overflow,
+
+    #[msg("Inactive")]     // 6003
+    Inactive,
 }
