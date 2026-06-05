@@ -7,4 +7,7 @@ pub enum DispatcherError {
 
     #[msg("Unauthorized")]    // 6001
     Unauthorized,
+
+    #[msg("Overflow")]        // 6002
+    Overflow,
 }

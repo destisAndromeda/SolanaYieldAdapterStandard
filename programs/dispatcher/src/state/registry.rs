@@ -11,7 +11,7 @@ pub struct Registry {
     pub creator_key: Pubkey,
 
     /// Index for adapters PDA seeds
-    pub adapters_index: u64,
+    pub adapter_index: u64,
 
     /// Bump for ProgramConfig PDA seeds
     pub bump: u8,

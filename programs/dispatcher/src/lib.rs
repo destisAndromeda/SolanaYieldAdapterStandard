@@ -15,31 +15,6 @@ declare_id!("2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU");
 pub mod dispatcher {
     use super::*;
 
-    /// Initializes the program configuration account.
-    /// 
-    /// This is the root of the program hierarchy and can only be called
-    /// by the hardcoded initializer address.
-    pub fn program_config_init(
-        ctx: Context<ProgramConfigInit>,
-        args: ProgramConfigInitArgs,
-    ) -> Result<()> {
-        ProgramConfigInit::
-            program_config_init(ctx, args)
-    }
-
-    /// Initializes the dispatcher account.
-    ///
-    /// Can only be called by the `creator_key` stored in `ProgramConfig`.
-    /// The dispatcher acts as the routing layer between the standard interface
-    /// and the underlying yield protocol adapters.
-    pub fn dispatcher_init(
-        ctx: Context<DispatcherInit>,
-        args: DispatcherInitArgs,
-    ) -> Result<()> {
-        DispatcherInit::
-            dispatcher_init(ctx, args)
-    }
-
     /// Initializes the adapter registry account.
     ///
     /// Can only be called by the `creator_key` stored in `Dispatcher`.
@@ -60,14 +35,5 @@ pub mod dispatcher {
     ) -> Result<()> {
         AdapterInfoInit::
             adapter_info_init(ctx, args)
-    }
-
-    /// Deposits through the selected adapter.
-    pub fn dispatcher_deposit(
-        ctx: Context<DispatcherDeposit>,
-        args: DispatcherDepositArgs,
-    ) -> Result<()> {
-        DispatcherDeposit::
-            dispatcher_deposit(ctx, args)
     }
 }

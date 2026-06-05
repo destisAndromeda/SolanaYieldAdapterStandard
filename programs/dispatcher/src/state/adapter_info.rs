@@ -8,7 +8,7 @@ pub struct AdapterInfo {
     pub authority: Pubkey,
 
     /// Program id for the adapter
-    pub adapter_program_id: Pubkey,
+    pub program_id: Pubkey,
 
     /// PDA bump
     pub bump: u8,
@@ -23,7 +23,7 @@ impl AdapterInfo {
         );
 
         require_keys_neq!(
-            self.adapter_program_id,
+            self.program_id,
             Pubkey::default(),
             DispatcherError::InvalidAccount,
         );
