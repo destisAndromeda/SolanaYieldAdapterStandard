@@ -23,7 +23,9 @@ pub struct KaminoAdapterInit<'info> {
         space = 8 + KaminoAdapter::INIT_SPACE,
         seeds = [
             SEED_PREFIX,
+            adapter_config.key().as_ref(),
             SEED_ADAPTER_CONFIG,
+            creator_key.key().as_ref(),
         ],
         bump,
     )]

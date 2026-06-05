@@ -38,4 +38,16 @@ pub mod kamino_adapter {
         KaminoAdapterInit::
             kamino_adapter_init(ctx, args)
     }
+
+    /// Initializes the deposit instruction configuration for a Kamino adapter.
+    ///
+    /// Stores the fixed Kamino accounts required for deposit CPI calls,
+    /// so users only need to pass their own accounts at deposit time.
+    pub fn deposit_instruction_config_init(
+        ctx: Context<DepositInstructionConfigInit>,
+        args: DepositInstructionConfigInitArgs,
+    ) -> Result<()> {
+        DepositInstructionConfigInit::
+            deposit_instruction_config_init(ctx, args)
+    }
 }
