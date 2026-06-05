@@ -1,5 +1,5 @@
-pub mod adapter_info;
+pub mod adapter;
 pub mod registry;
 
-pub use adapter_info::*;
+pub use adapter::*;
 pub use registry::*;

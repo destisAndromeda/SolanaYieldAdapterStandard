@@ -30,10 +30,10 @@ pub mod dispatcher {
 
     /// Registers a new adapter in the dispatcher registry.
     pub fn adapter_info_init(
-        ctx: Context<AdapterInfoInit>,
-        args: AdapterInfoInitArgs,
+        ctx: Context<AdapterInit>,
+        args: AdapterInitArgs,
     ) -> Result<()> {
-        AdapterInfoInit::
+        AdapterInit::
             adapter_info_init(ctx, args)
     }
 }

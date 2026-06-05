@@ -3,7 +3,7 @@ use crate::error::*;
 
 #[account]
 #[derive(InitSpace)]
-pub struct AdapterInfo {
+pub struct Adapter {
     /// Authority that can manage this adapter entry
     pub authority: Pubkey,
 
@@ -14,7 +14,7 @@ pub struct AdapterInfo {
     pub bump: u8,
 }
 
-impl AdapterInfo {
+impl Adapter {
     pub fn invariant(&self) -> Result<()> {
         require_keys_neq!(
             self.authority,
