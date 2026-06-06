@@ -1,12 +1,12 @@
 [package]
-name = "marginfi-adapter"
+name = "jupiter-adapter"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "marginfi_adapter"
+name = "jupiter_adapter"
 
 [features]
 default = []
@@ -22,6 +22,7 @@ custom-panic = []
 
 [dependencies]
 anchor-lang = "1.0.2"
+
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
