@@ -1,10 +1,14 @@
 use anchor_lang::prelude::*;
 
-use crate::constants::*;
+use crate::error::*;
 use crate::state::*;
+use crate::constants::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct AdapterInitArgs {
+    /// Authority that can update account state
+    pub authority: Pubkey,
+
     /// Adapter program id that will receive CPI requests.
     pub program_id: Pubkey,
 
@@ -17,21 +21,32 @@ pub struct AdapterInitArgs {
 pub struct AdapterInit<'info> {
     /// Registry authority allowed to register adapters.
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub initializer: Signer<'info>,
 
     #[account(
         init,
-        payer = owner,
+        payer = initializer,
         space = 8 + Adapter::INIT_SPACE,
         seeds = [
             SEED_PREFIX,
             args.program_id.as_ref(),
             SEED_ADAPTER,
-            owner.key().as_ref(),
+            args.authority.as_ref(),
         ],
         bump,
     )]
-    pub adapter_info: Account<'info, Adapter>,
+    pub adapter: Account<'info, Adapter>,
+
+    #[account(
+        has_one = initializer
+            @ DispatcherError::Unauthorized,
+        seeds = [
+            SEED_PREFIX,
+            SEED_REGISTRY,
+        ],
+        bump  = registry.bump,
+    )]
+    pub registry: Account<'info, Registry>,
 
     pub system_program: Program<'info, System>,
 }
@@ -41,19 +56,19 @@ impl AdapterInit<'_> {
         ctx: Context<Self>,
         args: AdapterInitArgs,
     ) -> Result<()> {
-        let authority = ctx.accounts.owner.key();
+        let authority = args.authority;
         let program_id = args.program_id;
         let is_active = args.is_active;
-        let bump = ctx.bumps.adapter_info;
+        let bump = ctx.bumps.adapter;
 
-        ctx.accounts.adapter_info.set_inner(Adapter {
+        ctx.accounts.adapter.set_inner(Adapter {
             authority,
             program_id,
             is_active,
             bump,
         });
 
-        ctx.accounts.adapter_info.invariant()?;
+        ctx.accounts.adapter.invariant()?;
 
         Ok(())
     }

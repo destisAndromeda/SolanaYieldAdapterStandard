@@ -17,6 +17,15 @@ declare_id!("2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU");
 pub mod dispatcher {
     use super::*;
 
+    /// Initializes the global adapter registry.
+    ///
+    /// This is a one-time setup instruction that creates the `Registry`
+    /// PDA and records the single authorized registry initializer.
+    /// Only the pre-configured `INITIALIZER` key can execute this call.
+    pub fn registry_init(ctx: Context<RegistryInit>) -> Result<()> {
+        RegistryInit::registry_init(ctx)
+    }
+
     /// Registers a new adapter in the dispatcher registry.
     pub fn adapter_init(
         ctx: Context<AdapterInit>,
