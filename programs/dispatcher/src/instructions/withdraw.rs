@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
 use anchor_lang::solana_program::instruction::{ Instruction, AccountMeta };
 
-use crate::emit::*;
+use crate::event::*;
 use crate::state::*;
 use crate::error::*;
 use crate::constants::*;
