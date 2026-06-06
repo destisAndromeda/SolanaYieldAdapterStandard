@@ -8,6 +8,7 @@ skip-lint = false
 [programs.localnet]
 dispatcher = "2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU"
 kamino-adapter = "BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT"
+marginfi-adapter = "43vGkNHfLML24Df9xCJddmwsx1mbje34yVsH13bqnbny"
 
 [provider]
 cluster = "localnet"
