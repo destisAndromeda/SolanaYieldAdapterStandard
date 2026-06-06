@@ -59,12 +59,10 @@ impl CurrentValue<'_> {
         _args: CurrentValueArgs,
     ) -> Result<()> {
         let program_id = ctx.accounts.adapter.program_id;
-        // Hard-code discriminator of adapter_deposit instruction
-        let discriminator: [u8; 8] = [67, 200,  59, 238, 163, 138, 170, 179];
 
         // 8 bytes for discriminator and amount
         let mut data = Vec::with_capacity(8);
-        data.extend_from_slice(&discriminator);
+        data.extend_from_slice(&ADAPTER_CURRENT_VALUE_DISCRIMINATOR);
 
         let accounts: Vec<AccountMeta> = ctx.remaining_accounts
             .iter()
