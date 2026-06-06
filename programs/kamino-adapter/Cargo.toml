@@ -22,7 +22,8 @@ custom-panic = []
 
 [dependencies]
 anchor-lang = "1.0.2"
-
+bytemuck = "1.25.0"
+klend-interface = "0.6.0"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }

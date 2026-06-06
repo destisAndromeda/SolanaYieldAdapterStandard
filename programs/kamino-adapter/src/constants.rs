@@ -16,5 +16,13 @@ pub const DEPOSIT_AND_WITHDRAW: [u8; 8] = {
     [141, 153, 39, 15, 64, 61, 88, 84]
 };
 
+pub const WITHDRAW_OBLIGATION_COLLATERAL_AND_REDEEM_RESERVE_COLLATERAL_V2: [u8; 8] = {
+    [235, 52, 119, 152, 149, 197, 20, 7]
+};
+
+pub const REDEEM_RESERVE_COLLATERAL: [u8; 8] = {
+    [234, 117, 181, 125, 185, 142, 220, 29]
+};
+
 /// Kamino program id for CPI
 pub const KAMINO_PROGRAM_ID: Pubkey = pubkey!("KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD");

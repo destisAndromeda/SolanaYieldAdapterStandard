@@ -6,3 +6,10 @@ pub struct AdapterDepositEmit {
     pub program_id: Pubkey,
     pub amount: u64,
 }
+
+#[event]
+pub struct AdapterWithdrawEmit {
+    pub authority: Pubkey,
+    pub program_id: Pubkey,
+    pub amount: u64,
+}
