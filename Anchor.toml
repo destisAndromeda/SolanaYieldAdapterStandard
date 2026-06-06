@@ -7,6 +7,7 @@ skip-lint = false
 
 [programs.localnet]
 dispatcher = "2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU"
+drift-adapter = "EojJcwUUuTuHyTJDyFjUjSxHbZLBuqJt7KPpBR6rVKZb"
 jupiter-adapter = "CqNUZykVkiQsGTW8rQRSm4cm2DtXgMCmNRvWfgHV9nB2"
 kamino-adapter = "BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT"
 marginfi-adapter = "43vGkNHfLML24Df9xCJddmwsx1mbje34yVsH13bqnbny"

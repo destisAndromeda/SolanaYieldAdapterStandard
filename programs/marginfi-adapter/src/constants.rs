@@ -8,4 +8,4 @@ pub const LENDING_ACCOUNT_WITHDRAW_DISCRIMINATOR: [u8; 8] = {
     [36, 72, 74, 19, 210, 210, 192, 192]
 };
 
-pub const MARGINFI_PROGRAM_ID: Pubkey = pubkey!("MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA");
+pub const PROGRAM_ID: Pubkey = pubkey!("MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA");

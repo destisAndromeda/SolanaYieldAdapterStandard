@@ -9,16 +9,16 @@ pub use event::*;
 pub use constants::*;
 pub use instructions::*;
 
-declare_id!("CqNUZykVkiQsGTW8rQRSm4cm2DtXgMCmNRvWfgHV9nB2");
+declare_id!("EojJcwUUuTuHyTJDyFjUjSxHbZLBuqJt7KPpBR6rVKZb");
 
 #[program]
-pub mod jupiter_adapter {
+pub mod marginfi_adapter {
     use super::*;
 
-    /// Routes a USDC deposit into Jupiter LP via CPI.
+    /// Routes a USDC deposit to the appropriate Drift instruction via CPI.
     ///
     /// The first byte of `extra_data` selects the target instruction:
-    /// - `0` — `depositCollateralForBorrows`
+    /// - `0` — `deposit` (extra_data[1..3] = market_index: u16, extra_data[3] = reduce_only: bool)
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
     pub fn adapter_deposit(
@@ -28,10 +28,10 @@ pub mod jupiter_adapter {
         AdapterDeposit::adapter_deposit(ctx, args)
     }
 
-    /// Routes a USDC withdrawal from Jupiter LP via CPI.
+    /// Routes a USDC withdrawal from the appropriate Drift instruction via CPI.
     ///
     /// The first byte of `extra_data` selects the target instruction:
-    /// - `0` — `withdrawCollateralForBorrows`
+    /// - `0` — `withdraw` (extra_data[1..3] = market_index: u16, extra_data[3] = reduce_only: bool)
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
     pub fn adapter_withdraw(
@@ -41,13 +41,13 @@ pub mod jupiter_adapter {
         AdapterWithdraw::adapter_withdraw(ctx, args)
     }
 
-    /// Returns the current asset shares of the user's MarginFi position.
+    /// Returns the current USDC spot balance from the user's Drift account.
     ///
-    /// Reads `MarginfiAccount` directly via zero-copy deserialization and logs
-    /// raw `asset_shares`. For exact USDC amount, multiply by the exchange rate
-    /// from the `Bank` account. Can be simulated off-chain at no cost.
+    /// Reads `User.spot_positions[0].scaled_balance` directly via zero-copy
+    /// deserialization and emits an `AdapterCurrentValueEvent`.
+    /// Can be simulated off-chain at no cost via `simulateTransaction`.
     ///
-    /// `remaining_accounts[0]` — MarginFi MarginfiAccount.
+    /// `remaining_accounts[0]` — Drift User account.
     pub fn adapter_current_value(
         ctx: Context<AdapterCurrentValue>,
     ) -> Result<()> {

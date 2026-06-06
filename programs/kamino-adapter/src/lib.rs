@@ -1,13 +1,11 @@
-pub mod emit;
+pub mod event;
 pub mod error;
-pub mod state;
 pub mod constants;
 pub mod instructions;
 
 use anchor_lang::prelude::*;
 
-pub use emit::*;
-pub use state::*;
+pub use event::*;
 pub use constants::*;
 pub use instructions::*;
 

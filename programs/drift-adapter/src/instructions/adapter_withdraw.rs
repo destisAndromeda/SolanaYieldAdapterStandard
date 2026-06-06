@@ -7,19 +7,19 @@ use crate::error::*;
 use crate::constants::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct AdapterDepositArgs {
+pub struct AdapterWithdrawArgs {
     pub amount: u64,
     pub extra_data: Vec<u8>,
 }
 
 #[derive(Accounts)]
-pub struct AdapterDeposit<'info> {
+pub struct AdapterWithdraw<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
 }
 
-impl AdapterDeposit<'_> {
-    fn validate(&self, args: &AdapterDepositArgs) -> Result<()> {
+impl AdapterWithdraw<'_> {
+    fn validate(&self, args: &AdapterWithdrawArgs) -> Result<()> {
         let Self {
             authority,            
         } = self;
@@ -39,16 +39,17 @@ impl AdapterDeposit<'_> {
     }
 
     #[access_control(ctx.accounts.validate(&args))]
-    pub fn adapter_deposit(
+    pub fn adapter_withdraw(
         ctx: Context<Self>,
-        args: AdapterDepositArgs,
+        args: AdapterWithdrawArgs,
     ) -> Result<()> {
         // Zero index contain function id for matching
         match args.extra_data[0] {
             0 => {
                 // The name must match the name of the actual instruction being called 
-                Self::deposit_collateral_for_borrows(ctx, args)?;
+                Self::withdraw(ctx, args)?;
             },
+
             _ => return err!(AdapterError::UnknownFunction),
         }
 
@@ -85,7 +86,7 @@ impl AdapterDeposit<'_> {
 
         invoke(&instruction, ctx.remaining_accounts)?;
 
-        emit!( AdapterDepositEvent {
+        emit!( AdapterWithdrawEvent {
             authority: ctx.accounts.authority.key(),
             program_id,
             amount,
@@ -94,15 +95,15 @@ impl AdapterDeposit<'_> {
         Ok(())
     }
 
-    fn deposit_collateral_for_borrows(
+    fn withdraw(
         ctx: Context<Self>,
-        args: AdapterDepositArgs,
+        args: AdapterWithdrawArgs,
     ) -> Result<()> {
         Self::build_and_invoke(
             ctx,
-            &DEPOSIT_COLLATERAL_FOR_BORROWS_DISCRIMINATOR,
+            &WITHDRAW_DISCRIMINATOR,
             args.amount, 
-            &[],
+            &args.extra_data[1..],
         )
     }
 }

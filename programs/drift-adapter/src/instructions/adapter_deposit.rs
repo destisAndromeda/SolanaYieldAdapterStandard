@@ -47,7 +47,7 @@ impl AdapterDeposit<'_> {
         match args.extra_data[0] {
             0 => {
                 // The name must match the name of the actual instruction being called 
-                Self::deposit_collateral_for_borrows(ctx, args)?;
+                Self::deposit(ctx, args)?;
             },
             _ => return err!(AdapterError::UnknownFunction),
         }
@@ -94,15 +94,15 @@ impl AdapterDeposit<'_> {
         Ok(())
     }
 
-    fn deposit_collateral_for_borrows(
+    fn deposit(
         ctx: Context<Self>,
         args: AdapterDepositArgs,
     ) -> Result<()> {
         Self::build_and_invoke(
             ctx,
-            &DEPOSIT_COLLATERAL_FOR_BORROWS_DISCRIMINATOR,
+            &DEPOSIT_DISCRIMINATOR,
             args.amount, 
-            &[],
+            &args.extra_data[1..],
         )
     }
 }

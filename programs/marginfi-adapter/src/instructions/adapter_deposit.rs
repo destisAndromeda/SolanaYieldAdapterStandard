@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
 use anchor_lang::solana_program::instruction::{ Instruction, AccountMeta };
 
-use crate::emit::*;
+use crate::event::*;
 use crate::error::*;
 use crate::constants::*;
 
@@ -75,7 +75,7 @@ impl AdapterDeposit<'_> {
             })
             .collect();
 
-        let program_id = MARGINFI_PROGRAM_ID;
+        let program_id = PROGRAM_ID;
 
         let instruction = Instruction {
             program_id,
@@ -85,7 +85,7 @@ impl AdapterDeposit<'_> {
 
         invoke(&instruction, ctx.remaining_accounts)?;
 
-        emit!( AdapterDepositEmit {
+        emit!( AdapterDepositEvent {
             authority: ctx.accounts.authority.key(),
             program_id,
             amount,

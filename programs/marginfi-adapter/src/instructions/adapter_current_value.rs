@@ -1,4 +1,6 @@
 use anchor_lang::prelude::*;
+use crate::event::*;
+use crate::constants::*;
 
 #[derive(Accounts)]
 pub struct AdapterCurrentValue<'info> {
@@ -17,7 +19,12 @@ impl AdapterCurrentValue<'_> {
         let offset = 8 + 32; // discriminator + bank_pk
         let asset_shares = u128::from_le_bytes(data[offset..offset+16].try_into().unwrap());
 
-        msg!("Current Value (asset_shares): {}", asset_shares);
+        emit!( AdapterCurrentValueEvent {
+            authority: ctx.accounts.authority.key(),
+            program_id: PROGRAM_ID,
+            current_value: asset_shares as u64,
+        });
+
         Ok(())
     }
 }
