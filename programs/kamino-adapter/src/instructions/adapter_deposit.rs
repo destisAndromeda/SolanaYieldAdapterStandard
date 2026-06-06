@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
 use anchor_lang::solana_program::instruction::{ Instruction, AccountMeta };
+use klend_interface::KLEND_PROGRAM_ID;
 
 use crate::emit::*;
 use crate::error::*;
@@ -78,8 +79,10 @@ impl AdapterDeposit<'_> {
             })
             .collect();
 
+        let program_id = Pubkey::from(KLEND_PROGRAM_ID.to_bytes());
+
         let instruction = Instruction {
-            program_id: KAMINO_PROGRAM_ID,
+            program_id,
             accounts,
             data,
         };
@@ -88,7 +91,7 @@ impl AdapterDeposit<'_> {
 
         emit!( AdapterDepositEmit {
             authority: ctx.accounts.authority.key(),
-            program_id: KAMINO_PROGRAM_ID,
+            program_id,
             amount,
         });
 

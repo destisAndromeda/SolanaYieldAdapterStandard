@@ -23,6 +23,3 @@ pub const WITHDRAW_OBLIGATION_COLLATERAL_AND_REDEEM_RESERVE_COLLATERAL_V2: [u8; 
 pub const REDEEM_RESERVE_COLLATERAL: [u8; 8] = {
     [234, 117, 181, 125, 185, 142, 220, 29]
 };
-
-/// Kamino program id for CPI
-pub const KAMINO_PROGRAM_ID: Pubkey = pubkey!("KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD");
