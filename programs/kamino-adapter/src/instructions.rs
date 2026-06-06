@@ -1,3 +1,3 @@
-pub mod initialize;
+pub mod adapter_deposit;
 
-pub use initialize::*;
+pub use adapter_deposit::*;
