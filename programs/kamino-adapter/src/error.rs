@@ -1,10 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum AdapterError {
-    #[msg("InvalidAccount")] // 6000
-    InvalidAccount,
-
-    #[msg("Unauthorized")]   // 6001
-    Unauthorized,
+pub enum ErrorCode {
+    #[msg("Custom error message")]
+    CustomError,
 }
