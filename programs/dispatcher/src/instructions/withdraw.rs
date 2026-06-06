@@ -10,36 +10,24 @@ use crate::constants::*;
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct WithdrawArgs {
     pub amount: u64,
-    pub adapter_index: u64,
-
     pub extra_data: Vec<u8>,
 }
 
 #[derive(Accounts)]
-#[instruction(args: WithdrawArgs)]
 pub struct Withdraw<'info> {
     #[account(mut)]
-    pub authority: Signer<'info>,
+    pub signer: Signer<'info>,
 
     #[account(
         seeds = [
             SEED_PREFIX,
-            registry.creator_key.as_ref(),
-            SEED_ADAPTER_INFO,
-            &args.adapter_index.to_be_bytes(),
+            adapter.program_id.as_ref(),
+            SEED_ADAPTER,
+            adapter.authority.as_ref(),
         ],
         bump  = adapter.bump,
     )]
     pub adapter: Account<'info, Adapter>,
-
-    #[account(
-        seeds = [
-            SEED_PREFIX,
-            SEED_REGISTRY,
-        ],
-        bump  = registry.bump,
-    )]
-    pub registry: Account<'info, Registry>,
 }
 
 impl Withdraw<'_> {
@@ -96,10 +84,9 @@ impl Withdraw<'_> {
 
         invoke(&instruction, ctx.remaining_accounts)?;
 
-        emit!( WithdrawEmit {
-            authority: ctx.accounts.authority.key(),
+        emit!( WithdrawEvent {
+            authority: ctx.accounts.signer.key(),
             program_id,
-            adapter_index: args.adapter_index,
             amount: args.amount,
         });
 

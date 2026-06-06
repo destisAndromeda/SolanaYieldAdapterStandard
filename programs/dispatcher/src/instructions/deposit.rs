@@ -10,36 +10,24 @@ use crate::constants::*;
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct DepositArgs {
     pub amount: u64,
-    pub adapter_index: u64,
-
     pub extra_data: Vec<u8>, 
 }
 
 #[derive(Accounts)]
-#[instruction(args: DepositArgs)]
 pub struct Deposit<'info> {
     #[account(mut)]
-    pub authority: Signer<'info>,
+    pub signer: Signer<'info>,
 
     #[account(
         seeds = [
             SEED_PREFIX,
-            registry.creator_key.as_ref(),
-            SEED_ADAPTER_INFO,
-            &args.adapter_index.to_be_bytes(),
+            adapter.program_id.as_ref(),
+            SEED_ADAPTER,
+            adapter.authority.as_ref(),
         ],
         bump  = adapter.bump,
     )]
     pub adapter: Account<'info, Adapter>,
-
-    #[account(
-        seeds = [
-            SEED_PREFIX,
-            SEED_REGISTRY,
-        ],
-        bump  = registry.bump,
-    )]
-    pub registry: Account<'info, Registry>,
 }
 
 impl Deposit<'_> {
@@ -97,10 +85,9 @@ impl Deposit<'_> {
 
         invoke(&instruction, ctx.remaining_accounts)?;
 
-        emit!( DepositEmit {
-            authority: ctx.accounts.authority.key(),
+        emit!( DepositEvent {
+            authority: ctx.accounts.signer.key(),
             program_id,
-            adapter_index: args.adapter_index,
             amount: args.amount,
         });
 

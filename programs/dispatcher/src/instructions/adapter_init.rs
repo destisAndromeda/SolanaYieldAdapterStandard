@@ -1,7 +1,6 @@
 use anchor_lang::prelude::*;
 
 use crate::constants::*;
-use crate::error::*;
 use crate::state::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -14,43 +13,35 @@ pub struct AdapterInitArgs {
 }
 
 #[derive(Accounts)]
+#[instruction(args: AdapterInitArgs)]
 pub struct AdapterInit<'info> {
     /// Registry authority allowed to register adapters.
     #[account(mut)]
-    pub authority: Signer<'info>,
+    pub owner: Signer<'info>,
 
     #[account(
         init,
-        payer = authority,
+        payer = owner,
         space = 8 + Adapter::INIT_SPACE,
         seeds = [
             SEED_PREFIX,
-            registry.creator_key.as_ref(),
-            SEED_ADAPTER_INFO,
-            &registry.adapter_index.to_le_bytes(),
+            args.program_id.as_ref(),
+            SEED_ADAPTER,
+            owner.key().as_ref(),
         ],
         bump,
     )]
     pub adapter_info: Account<'info, Adapter>,
 
-    #[account(
-        seeds = [
-            SEED_PREFIX,
-            SEED_REGISTRY,
-        ],
-        bump = registry.bump,
-    )]
-    pub registry: Account<'info, Registry>,
-
     pub system_program: Program<'info, System>,
 }
 
 impl AdapterInit<'_> {
-    pub fn adapter_info_init(
+    pub fn adapter_init(
         ctx: Context<Self>,
         args: AdapterInitArgs,
     ) -> Result<()> {
-        let authority = ctx.accounts.authority.key();
+        let authority = ctx.accounts.owner.key();
         let program_id = args.program_id;
         let is_active = args.is_active;
         let bump = ctx.bumps.adapter_info;
@@ -61,10 +52,6 @@ impl AdapterInit<'_> {
             is_active,
             bump,
         });
-
-        ctx.accounts.registry.adapter_index =
-            ctx.accounts.registry.adapter_index.checked_add(1)
-                .ok_or(error!(DispatcherError::Overflow))?;
 
         ctx.accounts.adapter_info.invariant()?;
 

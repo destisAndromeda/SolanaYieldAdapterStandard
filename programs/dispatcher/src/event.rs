@@ -1,17 +1,23 @@
 use anchor_lang::prelude::*;
 
 #[event]
-pub struct DepositEmit {
+pub struct DepositEvent {
     pub authority: Pubkey,
     pub program_id: Pubkey,
-    pub adapter_index: u64,
     pub amount: u64,
 }
 
 #[event]
-pub struct WithdrawEmit {
+pub struct WithdrawEvent {
     pub authority: Pubkey,
     pub program_id: Pubkey,
-    pub adapter_index: u64,
     pub amount: u64,
+}
+
+#[event]
+pub struct ToggleEvent {
+    pub authority: Pubkey,
+    pub adapter: Pubkey,
+    pub program_id: Pubkey,
+    pub is_active: bool,
 }

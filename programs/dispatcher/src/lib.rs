@@ -17,24 +17,12 @@ declare_id!("2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU");
 pub mod dispatcher {
     use super::*;
 
-    /// Initializes the adapter registry account.
-    ///
-    /// Can only be called by the `creator_key` stored in `Dispatcher`.
-    /// The registry governs which adapters are approved for use
-    /// and controls who can register new adapters.
-    pub fn registry_init(
-        ctx: Context<RegistryInit>,
-        args: RegistryInitArgs,
-    ) -> Result<()> {
-        RegistryInit::registry_init(ctx, args)
-    }
-
     /// Registers a new adapter in the dispatcher registry.
-    pub fn adapter_info_init(
+    pub fn adapter_init(
         ctx: Context<AdapterInit>,
         args: AdapterInitArgs,
     ) -> Result<()> {
-        AdapterInit::adapter_info_init(ctx, args)
+        AdapterInit::adapter_init(ctx, args)
     }
     
     // Routes a USDC deposit to the specified adapter via CPI.
@@ -68,10 +56,11 @@ pub mod dispatcher {
     /// Returns the total USDC value including accrued interest via `msg!`.
     /// This instruction can be simulated off-chain at no cost using
     /// `simulateTransaction` to read the current position without paying fees.
-    pub fn current_value(
-        ctx: Context<CurrentValue>,
-        args: CurrentValueArgs,
-    ) -> Result<()> {
-        CurrentValue::current_value(ctx, args)
+    pub fn current_value(ctx: Context<CurrentValue>) -> Result<()> {
+        CurrentValue::current_value(ctx)
+    }
+
+    pub fn toggle_adapter(ctx: Context<ToggleAdapter>) -> Result<()> {
+        ToggleAdapter::toggle_adapter(ctx)
     }
 }

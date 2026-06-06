@@ -6,7 +6,7 @@ pub const EXTRA_DATA_MAX_LEN: usize = 64;
 // PDA seeds
 pub const SEED_PREFIX: &[u8] = b"dispatcher";
 pub const SEED_REGISTRY: &[u8] = b"registry";
-pub const SEED_ADAPTER_INFO: &[u8] = b"adapter_info";
+pub const SEED_ADAPTER: &[u8] = b"adapter_info";
 
 // Hard-code discriminators
 pub const ADAPTER_DEPOSIT_DISCRIMINATOR: [u8; 8] = {

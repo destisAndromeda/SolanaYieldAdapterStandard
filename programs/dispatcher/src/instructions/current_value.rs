@@ -6,13 +6,7 @@ use crate::state::*;
 use crate::error::*;
 use crate::constants::*;
 
-#[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct CurrentValueArgs {
-    pub adapter_index: u64,
-}
-
 #[derive(Accounts)]
-#[instruction(args: CurrentValueArgs)]
 pub struct CurrentValue<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -20,22 +14,13 @@ pub struct CurrentValue<'info> {
     #[account(
         seeds = [
             SEED_PREFIX,
-            registry.creator_key.as_ref(),
-            SEED_ADAPTER_INFO,
-            &args.adapter_index.to_be_bytes(),
+            adapter.program_id.as_ref(),
+            SEED_ADAPTER,
+            adapter.authority.as_ref(),
         ],
         bump  = adapter.bump,
     )]
     pub adapter: Account<'info, Adapter>,
-
-    #[account(
-        seeds = [
-            SEED_PREFIX,
-            SEED_REGISTRY,
-        ],
-        bump  = registry.bump,
-    )]
-    pub registry: Account<'info, Registry>,
 }
 
 impl CurrentValue<'_> {
@@ -54,10 +39,7 @@ impl CurrentValue<'_> {
     }
 
     #[access_control(ctx.accounts.validate())]
-    pub fn current_value(
-        ctx: Context<Self>,
-        _args: CurrentValueArgs,
-    ) -> Result<()> {
+    pub fn current_value(ctx: Context<Self>) -> Result<()> {
         let program_id = ctx.accounts.adapter.program_id;
 
         // 8 bytes for discriminator and amount
