@@ -19,43 +19,55 @@ pub struct AdapterDeposit<'info> {
 }
 
 impl AdapterDeposit<'_> {
-    fn validate(&self, args: &AdapterDepositArgs) -> Result<()> {
-        let Self { authority } = self;
+    fn validate(&self, ctx: &Context<Self>, args: &AdapterDepositArgs) -> Result<()> {
+        require!(!args.extra_data.is_empty(), AdapterError::InvalidArgs);
 
-        require_keys_neq!(
-            authority.key(),
-            Pubkey::default(),
+        // CCIP ccip_send has 18 base accounts.
+        require!(
+            ctx.remaining_accounts.len() >= 18,
             AdapterError::InvalidAccount,
         );
 
-        require!(!args.extra_data.is_empty(), AdapterError::InvalidArgs,);
+        // CCIP account #3 is authority signer.
+        require_keys_eq!(
+            ctx.remaining_accounts[3].key(),
+            ctx.accounts.authority.key(),
+            AdapterError::Unauthorized,
+        );
+
+        require!(
+            ctx.remaining_accounts[3].is_signer,
+            AdapterError::Unauthorized,
+        );
 
         Ok(())
     }
 
-    #[access_control(ctx.accounts.validate(&args))]
+    #[access_control(ctx.accounts.validate(&ctx, &args))]
     pub fn adapter_deposit(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
-        // Zero index contain function id for matching
+        // extra_data[0] is local adapter selector.
+        // 0 = ccip_send
         match args.extra_data[0] {
-            0 => {
-                // The name must match the name of the actual instruction being called
-                Self::deposit(ctx, args)?;
-            }
+            0 => Self::ccip_send(ctx, args)?,
             _ => return err!(AdapterError::UnknownFunction),
         }
 
         Ok(())
     }
 
-    fn build_and_invoke(
+    fn build_and_invoke_ccip(
         ctx: Context<Self>,
         discriminator: &[u8],
         amount: u64,
         extra_data: &[u8],
     ) -> Result<()> {
-        let mut data = Vec::with_capacity(16 + extra_data.len());
+        // CCIP data format:
+        // 8-byte ccip_send discriminator + Borsh-serialized CcipSendInstructionArgs.
+        //
+        // Do NOT append adapter amount here.
+        // CCIP amount is already inside message.token_amounts in extra_data.
+        let mut data = Vec::with_capacity(8 + extra_data.len());
         data.extend_from_slice(discriminator);
-        data.extend_from_slice(&amount.to_le_bytes());
         data.extend_from_slice(extra_data);
 
         let accounts: Vec<AccountMeta> = ctx
@@ -87,10 +99,10 @@ impl AdapterDeposit<'_> {
         Ok(())
     }
 
-    fn deposit(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
-        Self::build_and_invoke(
+    fn ccip_send(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
+        Self::build_and_invoke_ccip(
             ctx,
-            &DEPOSIT_DISCRIMINATOR,
+            &CCIP_SEND,
             args.amount,
             &args.extra_data[1..],
         )

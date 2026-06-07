@@ -41,15 +41,12 @@ impl Deposit<'_> {
     #[access_control(ctx.accounts.validate(&args))]
     pub fn deposit(ctx: Context<Self>, args: DepositArgs) -> Result<()> {
         let program_id = ctx.accounts.adapter.program_id;
-        let amount = args.amount.to_le_bytes();
 
-        let len = args.extra_data.len();
-
-        // 16 bytes for discriminator and amount
-        let mut data = Vec::with_capacity(16 + len);
+        // Borsh-serialize the args: 8 bytes for u64 amount + 4 bytes length prefix + data for Vec
+        let serialized_args = borsh::to_vec(&args)?;
+        let mut data = Vec::with_capacity(8 + serialized_args.len());
         data.extend_from_slice(&ADAPTER_DEPOSIT_DISCRIMINATOR);
-        data.extend_from_slice(&amount);
-        data.extend_from_slice(&args.extra_data);
+        data.extend_from_slice(&serialized_args);
 
         let accounts: Vec<AccountMeta> = ctx
             .remaining_accounts

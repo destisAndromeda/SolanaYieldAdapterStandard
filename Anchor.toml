@@ -6,12 +6,13 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-dispatcher = { address = "2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU", features = ["testing"] }
-mock_adapter = "3ChHEmV3NhvmtzLXPDY62aJizN4tiBGapzpmUKwxj6cV"
+dispatcher = "2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU"
 drift-adapter = "EojJcwUUuTuHyTJDyFjUjSxHbZLBuqJt7KPpBR6rVKZb"
 jupiter-adapter = "CqNUZykVkiQsGTW8rQRSm4cm2DtXgMCmNRvWfgHV9nB2"
 kamino-adapter = "BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT"
+maple-adapter = "7A1CFrXTEw96vdtsYPG1h5vhXbFCszaipfavL1XhgQKL"
 marginfi-adapter = "43vGkNHfLML24Df9xCJddmwsx1mbje34yVsH13bqnbny"
+mock_adapter = "3ChHEmV3NhvmtzLXPDY62aJizN4tiBGapzpmUKwxj6cV"
 
 [provider]
 cluster = "localnet"
@@ -21,4 +22,4 @@ wallet = "~/.config/solana/id.json"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 ./tests/dispatcher/dispatcher.ts"
 
 [hooks]
-post-build = "cargo build-sbf --manifest-path programs/dispatcher/Cargo.toml --features testing"
+post_build = "cargo build-sbf --manifest-path programs/dispatcher/Cargo.toml --features testing"

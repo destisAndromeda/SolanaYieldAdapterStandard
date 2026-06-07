@@ -19,6 +19,7 @@ export const SEED_ADAPTER = "adapter_info";
 export const EXTRA_DATA_MAX_LEN = 64;
 export const ADAPTER_STATUS_ACTIVE = 0;
 export const ADAPTER_STATUS_PAUSED = 1;
+export const MOCK_CURRENT_VALUE = 123_456_789;
 export const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 
 export const provider = anchor.AnchorProvider.env();
@@ -80,8 +81,14 @@ export async function airdrop(
   pubkey: PublicKey,
   lamports = 2 * anchor.web3.LAMPORTS_PER_SOL,
 ): Promise<void> {
+  const latest = await provider.connection.getLatestBlockhash();
   const signature = await provider.connection.requestAirdrop(pubkey, lamports);
-  await provider.connection.confirmTransaction(signature);
+
+  await provider.connection.confirmTransaction({
+    signature,
+    blockhash: latest.blockhash,
+    lastValidBlockHeight: latest.lastValidBlockHeight,
+  });
 }
 
 export const mockAdapterProgramAccount = {
@@ -107,5 +114,39 @@ export async function parseDispatcherEvents(txSig: string) {
     new BorshCoder(dispatcherProgram.idl),
   );
 
-  return [...parser.parseLogs(tx.meta.logMessages)];
+  const iterator = parser.parseLogs(tx.meta.logMessages);
+  const events: any[] = [];
+  let result = iterator.next();
+  while (!result.done) {
+    events.push(result.value);
+    result = iterator.next();
+  }
+  return events;
+}
+
+export async function parseMockAdapterEvents(txSig: string) {
+  await provider.connection.confirmTransaction(txSig, "confirmed");
+
+  const tx = await provider.connection.getTransaction(txSig, {
+    commitment: "confirmed",
+    maxSupportedTransactionVersion: 0,
+  });
+
+  if (!tx?.meta?.logMessages) {
+    throw new Error(`missing logs for transaction ${txSig}`);
+  }
+
+  const parser = new EventParser(
+    mockAdapterProgram.programId,
+    new BorshCoder(mockAdapterProgram.idl),
+  );
+
+  const iterator = parser.parseLogs(tx.meta.logMessages);
+  const events: any[] = [];
+  let result = iterator.next();
+  while (!result.done) {
+    events.push(result.value);
+    result = iterator.next();
+  }
+  return events;
 }

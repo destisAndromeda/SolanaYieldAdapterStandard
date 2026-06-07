@@ -1,0 +1,245 @@
+yarn run v1.22.22
+$ /home/yutiuser/projects/solana/solana-yield-adapter-standard/node_modules/.bin/ts-mocha -p ./tsconfig.json -t 1000000 ./tests/dispatcher/dispatcher.ts
+(node:461115) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/yutiuser/projects/solana/solana-yield-adapter-standard/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+  registry_init
+    1) error: wrong signer returns Unauthorized
+    2) happy: creates registry PDA with correct initializer and bump
+
+  adapter_init
+    3) error: non-initializer signer returns Unauthorized
+    4) happy: creates active adapter with correct fields
+    5) error: invalid status returns InvalidStatus
+    6) error: default authority returns InvalidAccount
+    7) error: default programId returns InvalidAccount
+    8) error: default supportedMint returns InvalidAccount
+    9) happy: stores paused status correctly
+    10) error: calling twice with same seeds fails with account already in use
+
+  toggle_adapter
+    11) "before all" hook for "happy: authority toggles active status to paused"
+
+  deposit
+    12) happy: active adapter with valid extra_data succeeds
+    13) happy: empty extra_data succeeds
+    14) happy: extra_data of exactly 64 bytes succeeds
+    15) error: inactive adapter returns Inactive
+    16) error: extra_data longer than max returns Overflow
+
+  withdraw
+    17) happy: active adapter with valid extra_data succeeds
+    18) happy: empty extra_data succeeds
+    19) happy: extra_data of exactly 64 bytes succeeds
+    20) error: inactive adapter returns Inactive
+    21) error: extra_data longer than max returns Overflow
+
+  current_value
+    22) happy: active adapter invokes mock adapter successfully and returns value
+    23) error: inactive adapter returns Inactive
+
+
+  0 passing (2s)
+  23 failing
+
+  1) registry_init
+       error: wrong signer returns Unauthorized:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:51:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  2) registry_init
+       happy: creates registry PDA with correct initializer and bump:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  3) adapter_init
+       error: non-initializer signer returns Unauthorized:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:109:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  4) adapter_init
+       happy: creates active adapter with correct fields:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  5) adapter_init
+       error: invalid status returns InvalidStatus:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:166:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  6) adapter_init
+       error: default authority returns InvalidAccount:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:199:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  7) adapter_init
+       error: default programId returns InvalidAccount:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:232:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  8) adapter_init
+       error: default supportedMint returns InvalidAccount:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:265:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  9) adapter_init
+       happy: stores paused status correctly:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  10) adapter_init
+       error: calling twice with same seeds fails with account already in use:
+     AssertionError: expected 'Error: Simulation failed. \nMessage: …' to match /already in use/i
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:312:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  11) toggle_adapter
+       "before all" hook for "happy: authority toggles active status to paused":
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  12) deposit
+       happy: active adapter with valid extra_data succeeds:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  13) deposit
+       happy: empty extra_data succeeds:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  14) deposit
+       happy: extra_data of exactly 64 bytes succeeds:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  15) deposit
+       error: inactive adapter returns Inactive:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:478:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  16) deposit
+       error: extra_data longer than max returns Overflow:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:499:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  17) withdraw
+       happy: active adapter with valid extra_data succeeds:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  18) withdraw
+       happy: empty extra_data succeeds:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  19) withdraw
+       happy: extra_data of exactly 64 bytes succeeds:
+     Simulation failed. 
+Message: Transaction simulation failed: Attempt to load a program that does not exist. 
+Logs: 
+[]. 
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+  
+
+  20) withdraw
+       error: inactive adapter returns Inactive:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:589:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  21) withdraw
+       error: extra_data longer than max returns Overflow:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:610:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  22) current_value
+       happy: active adapter invokes mock adapter successfully and returns value:
+     AssertionError: expected 'ProgramAccountNotFound' to equal null
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:642:12
+      at Generator.next (<anonymous>)
+      at fulfilled (tests/dispatcher/dispatcher.ts:38:58)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+  23) current_value
+       error: inactive adapter returns Inactive:
+     AssertionError: expected SendTransactionError{ …(6) } to be an instance of AnchorError
+      at /home/yutiuser/projects/solana/solana-yield-adapter-standard/tests/dispatcher/dispatcher.ts:661:14
+      at Generator.throw (<anonymous>)
+      at rejected (tests/dispatcher/dispatcher.ts:39:65)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+
+
+error Command failed with exit code 23.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
