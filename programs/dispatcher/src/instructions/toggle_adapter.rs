@@ -10,6 +10,7 @@ pub struct ToggleAdapter<'info> {
     pub authority: Signer<'info>,
 
     #[account(
+        mut,
         has_one = authority @
             DispatcherError::Unauthorized,
         seeds = [
