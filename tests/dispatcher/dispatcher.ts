@@ -5,7 +5,6 @@ import {
   EXTRA_DATA_MAX_LEN,
   ADAPTER_STATUS_ACTIVE,
   ADAPTER_STATUS_PAUSED,
-  PROTOCOL_ID_KAMINO_USDC,
   USDC_MINT,
   activeAdapterPda,
   adapterAuthority,
@@ -80,7 +79,6 @@ describe("adapter_init", () => {
           authority: strayAuthority.publicKey,
           programId: mockAdapterProgram.programId,
           supportedMint: USDC_MINT,
-          protocolId: PROTOCOL_ID_KAMINO_USDC,
           status: ADAPTER_STATUS_ACTIVE,
         })
         .accounts({
@@ -112,7 +110,6 @@ describe("adapter_init", () => {
         authority: adapterAuthority.publicKey,
         programId: mockAdapterProgram.programId,
         supportedMint: USDC_MINT,
-        protocolId: PROTOCOL_ID_KAMINO_USDC,
         status: ADAPTER_STATUS_ACTIVE,
       })
       .accounts({
@@ -128,7 +125,6 @@ describe("adapter_init", () => {
     assert.isTrue(adapter.authority.equals(adapterAuthority.publicKey));
     assert.isTrue(adapter.programId.equals(mockAdapterProgram.programId));
     assert.isTrue(adapter.supportedMint.equals(USDC_MINT));
-    assert.strictEqual(adapter.protocolId, PROTOCOL_ID_KAMINO_USDC);
     assert.strictEqual(adapter.status, ADAPTER_STATUS_ACTIVE);
   });
 
@@ -138,7 +134,6 @@ describe("adapter_init", () => {
         authority: inactiveAdapterAuthority.publicKey,
         programId: mockAdapterProgram.programId,
         supportedMint: USDC_MINT,
-        protocolId: PROTOCOL_ID_KAMINO_USDC,
         status: ADAPTER_STATUS_PAUSED,
       })
       .accounts({
@@ -154,7 +149,6 @@ describe("adapter_init", () => {
     assert.isTrue(adapter.authority.equals(inactiveAdapterAuthority.publicKey));
     assert.isTrue(adapter.programId.equals(mockAdapterProgram.programId));
     assert.isTrue(adapter.supportedMint.equals(USDC_MINT));
-    assert.strictEqual(adapter.protocolId, PROTOCOL_ID_KAMINO_USDC);
     assert.strictEqual(adapter.status, ADAPTER_STATUS_PAUSED);
   });
 
@@ -165,7 +159,6 @@ describe("adapter_init", () => {
           authority: adapterAuthority.publicKey,
           programId: mockAdapterProgram.programId,
           supportedMint: USDC_MINT,
-          protocolId: PROTOCOL_ID_KAMINO_USDC,
           status: ADAPTER_STATUS_ACTIVE,
         })
         .accounts({
@@ -189,7 +182,6 @@ describe("toggle_adapter", () => {
         authority: toggleAdapterAuthority.publicKey,
         programId: mockAdapterProgram.programId,
         supportedMint: USDC_MINT,
-        protocolId: PROTOCOL_ID_KAMINO_USDC,
         status: ADAPTER_STATUS_ACTIVE,
       })
       .accounts({

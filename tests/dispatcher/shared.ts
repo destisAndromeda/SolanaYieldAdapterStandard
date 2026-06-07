@@ -19,7 +19,6 @@ export const SEED_ADAPTER = "adapter_info";
 export const EXTRA_DATA_MAX_LEN = 64;
 export const ADAPTER_STATUS_ACTIVE = 0;
 export const ADAPTER_STATUS_PAUSED = 1;
-export const PROTOCOL_ID_KAMINO_USDC = 0;
 export const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 
 export const provider = anchor.AnchorProvider.env();

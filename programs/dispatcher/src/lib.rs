@@ -59,7 +59,13 @@ pub mod dispatcher {
     pub fn current_value(ctx: Context<CurrentValue>) -> Result<()> {
         CurrentValue::current_value(ctx)
     }
-
+    
+    /// Toggles an adapter's status between `Active` and `Paused`.
+    ///
+    /// Only the adapter's authority can execute this instruction (enforced
+    /// by the `has_one` constraint). If the adapter is already `Deprecated`,
+    /// the call fails with `DispatcherError::Deprecated`. On success the
+    /// new status is persisted on-chain and a `ToggleEvent` is emitted.
     pub fn toggle_adapter(ctx: Context<ToggleAdapter>) -> Result<()> {
         ToggleAdapter::toggle_adapter(ctx)
     }

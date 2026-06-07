@@ -1,6 +1,6 @@
 use crate::error::*;
 use anchor_lang::prelude::*;
-use yield_adapter_interface::{AdapterStatus, ProtocolId};
+use yield_adapter_interface::AdapterStatus;
 
 #[account]
 #[derive(InitSpace)]
@@ -13,9 +13,6 @@ pub struct Adapter {
 
     /// Mint supported by this adapter entry
     pub supported_mint: Pubkey,
-
-    /// Yield protocol identifier from the standard interface
-    pub protocol_id: u16,
 
     /// Adapter status encoded as AdapterStatus
     pub status: u8,
@@ -53,11 +50,6 @@ impl Adapter {
             self.supported_mint,
             Pubkey::default(),
             DispatcherError::InvalidAccount,
-        );
-
-        require!(
-            ProtocolId::from_u16(self.protocol_id).is_some(),
-            DispatcherError::InvalidProtocol,
         );
 
         require!(

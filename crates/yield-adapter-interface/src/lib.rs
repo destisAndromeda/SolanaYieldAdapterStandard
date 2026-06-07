@@ -59,38 +59,6 @@ impl AdapterStatus {
     }
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq)]
-pub enum ProtocolId {
-    KaminoUsdc,
-    MarginFiUsdc,
-    JupiterLp,
-    MapleSyrup,
-    DriftInsuranceFund,
-}
-
-impl ProtocolId {
-    pub fn from_u16(value: u16) -> Option<Self> {
-        match value {
-            0 => Some(Self::KaminoUsdc),
-            1 => Some(Self::MarginFiUsdc),
-            2 => Some(Self::JupiterLp),
-            3 => Some(Self::MapleSyrup),
-            4 => Some(Self::DriftInsuranceFund),
-            _ => None,
-        }
-    }
-
-    pub fn as_u16(self) -> u16 {
-        match self {
-            Self::KaminoUsdc => 0,
-            Self::MarginFiUsdc => 1,
-            Self::JupiterLp => 2,
-            Self::MapleSyrup => 3,
-            Self::DriftInsuranceFund => 4,
-        }
-    }
-}
-
 pub fn set_return_u64(value: u64) {
     anchor_lang::solana_program::program::set_return_data(&value.to_le_bytes());
 }

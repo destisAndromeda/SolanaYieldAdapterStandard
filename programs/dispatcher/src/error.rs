@@ -17,9 +17,6 @@ pub enum DispatcherError {
     #[msg("InvalidStatus")] // 6004
     InvalidStatus,
 
-    #[msg("InvalidProtocol")] // 6005
-    InvalidProtocol,
-
     #[msg("Deprecated")] // 6006
     Deprecated,
 }

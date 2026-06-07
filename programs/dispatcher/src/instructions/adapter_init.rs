@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 use crate::constants::*;
 use crate::error::*;
 use crate::state::*;
-use yield_adapter_interface::{AdapterStatus, ProtocolId};
+use yield_adapter_interface::AdapterStatus;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct AdapterInitArgs {
@@ -15,9 +15,6 @@ pub struct AdapterInitArgs {
 
     /// Mint supported by this adapter entry.
     pub supported_mint: Pubkey,
-
-    /// Protocol identifier from the standard interface.
-    pub protocol_id: u16,
 
     /// Initial adapter status encoded as AdapterStatus.
     pub status: u8,
@@ -60,13 +57,7 @@ pub struct AdapterInit<'info> {
 
 impl AdapterInit<'_> {
     pub fn validate(args: &AdapterInitArgs) -> Result<()> {
-        let protocol_id = args.protocol_id;
         let status = args.status;
-
-        require!(
-            ProtocolId::from_u16(protocol_id).is_some(),
-            DispatcherError::InvalidProtocol,
-        );
 
         require!(
             AdapterStatus::from_u8(status).is_some(),
@@ -81,7 +72,6 @@ impl AdapterInit<'_> {
         let authority = args.authority;
         let program_id = args.program_id;
         let supported_mint = args.supported_mint;
-        let protocol_id = args.protocol_id;
         let status = args.status;
         let registered_at = Clock::get()?.unix_timestamp;
         let bump = ctx.bumps.adapter;
@@ -90,7 +80,6 @@ impl AdapterInit<'_> {
             authority,
             program_id,
             supported_mint,
-            protocol_id,
             status,
             registered_at,
             bump,
