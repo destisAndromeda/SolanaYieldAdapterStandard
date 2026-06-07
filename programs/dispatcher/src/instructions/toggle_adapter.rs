@@ -1,8 +1,9 @@
-use anchor_lang::prelude::*;
-use crate::event::*;
-use crate::error::*;
-use crate::state::*;
 use crate::constants::*;
+use crate::error::*;
+use crate::event::*;
+use crate::state::*;
+use anchor_lang::prelude::*;
+use yield_adapter_interface::AdapterStatus;
 
 #[derive(Accounts)]
 pub struct ToggleAdapter<'info> {
@@ -26,14 +27,19 @@ pub struct ToggleAdapter<'info> {
 
 impl ToggleAdapter<'_> {
     pub fn toggle_adapter(ctx: Context<ToggleAdapter>) -> Result<()> {
-        ctx.accounts.adapter.is_active =
-            !ctx.accounts.adapter.is_active;
+        let next_status = match ctx.accounts.adapter.status()? {
+            AdapterStatus::Active => AdapterStatus::Paused,
+            AdapterStatus::Paused => AdapterStatus::Active,
+            AdapterStatus::Deprecated => return err!(DispatcherError::Deprecated),
+        };
 
-        emit!( ToggleEvent {
+        ctx.accounts.adapter.status = next_status.as_u8();
+
+        emit!(ToggleEvent {
             authority: ctx.accounts.authority.key(),
             adapter: ctx.accounts.adapter.key(),
             program_id: ctx.accounts.adapter.program_id,
-            is_active: ctx.accounts.adapter.is_active,
+            status: ctx.accounts.adapter.status,
         });
 
         Ok(())

@@ -1,10 +1,11 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::instruction::{AccountMeta, Instruction};
 use anchor_lang::solana_program::program::invoke;
-use anchor_lang::solana_program::instruction::{ Instruction, AccountMeta };
 
-use crate::state::*;
-use crate::error::*;
 use crate::constants::*;
+use crate::error::*;
+use crate::state::*;
+use yield_adapter_interface::{read_return_u64, set_return_u64};
 
 #[derive(Accounts)]
 pub struct CurrentValue<'info> {
@@ -25,15 +26,9 @@ pub struct CurrentValue<'info> {
 
 impl CurrentValue<'_> {
     fn validate(&self) -> Result<()> {
-        let Self {
-            adapter,
-            ..
-        } = self;
+        let Self { adapter, .. } = self;
 
-        require!(
-            adapter.is_active,
-            DispatcherError::Inactive,
-        );
+        require!(adapter.is_active()?, DispatcherError::Inactive);
 
         Ok(())
     }
@@ -46,7 +41,8 @@ impl CurrentValue<'_> {
         let mut data = Vec::with_capacity(8);
         data.extend_from_slice(&ADAPTER_CURRENT_VALUE_DISCRIMINATOR);
 
-        let accounts: Vec<AccountMeta> = ctx.remaining_accounts
+        let accounts: Vec<AccountMeta> = ctx
+            .remaining_accounts
             .iter()
             .map(|incoming| AccountMeta {
                 pubkey: incoming.key(),
@@ -62,6 +58,9 @@ impl CurrentValue<'_> {
         };
 
         invoke(&instruction, ctx.remaining_accounts)?;
+
+        let current_value = read_return_u64()?;
+        set_return_u64(current_value);
 
         Ok(())
     }

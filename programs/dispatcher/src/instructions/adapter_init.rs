@@ -1,8 +1,9 @@
 use anchor_lang::prelude::*;
 
+use crate::constants::*;
 use crate::error::*;
 use crate::state::*;
-use crate::constants::*;
+use yield_adapter_interface::{AdapterStatus, ProtocolId};
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct AdapterInitArgs {
@@ -12,8 +13,14 @@ pub struct AdapterInitArgs {
     /// Adapter program id that will receive CPI requests.
     pub program_id: Pubkey,
 
-    /// Enable to use Adapter account if true
-    pub is_active: bool,
+    /// Mint supported by this adapter entry.
+    pub supported_mint: Pubkey,
+
+    /// Protocol identifier from the standard interface.
+    pub protocol_id: u16,
+
+    /// Initial adapter status encoded as AdapterStatus.
+    pub status: u8,
 }
 
 #[derive(Accounts)]
@@ -52,19 +59,40 @@ pub struct AdapterInit<'info> {
 }
 
 impl AdapterInit<'_> {
-    pub fn adapter_init(
-        ctx: Context<Self>,
-        args: AdapterInitArgs,
-    ) -> Result<()> {
+    pub fn validate(args: &AdapterInitArgs) -> Result<()> {
+        let protocol_id = args.protocol_id;
+        let status = args.status;
+
+        require!(
+            ProtocolId::from_u16(protocol_id).is_some(),
+            DispatcherError::InvalidProtocol,
+        );
+
+        require!(
+            AdapterStatus::from_u8(status).is_some(),
+            DispatcherError::InvalidStatus,
+        );
+
+        Ok(())
+    }
+
+    #[access_control(Self::validate(&args))]
+    pub fn adapter_init(ctx: Context<Self>, args: AdapterInitArgs) -> Result<()> {
         let authority = args.authority;
         let program_id = args.program_id;
-        let is_active = args.is_active;
+        let supported_mint = args.supported_mint;
+        let protocol_id = args.protocol_id;
+        let status = args.status;
+        let registered_at = Clock::get()?.unix_timestamp;
         let bump = ctx.bumps.adapter;
 
         ctx.accounts.adapter.set_inner(Adapter {
             authority,
             program_id,
-            is_active,
+            supported_mint,
+            protocol_id,
+            status,
+            registered_at,
             bump,
         });
 

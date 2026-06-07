@@ -1,15 +1,15 @@
-pub mod event;
-pub mod state;
-pub mod error;
 pub mod constants;
+pub mod error;
+pub mod event;
 pub mod instructions;
+pub mod state;
 
 use anchor_lang::prelude::*;
 
 pub use constants::*;
+pub use event::*;
 pub use instructions::*;
 pub use state::*;
-pub use event::*;
 
 declare_id!("2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU");
 
@@ -27,36 +27,27 @@ pub mod dispatcher {
     }
 
     /// Registers a new adapter in the dispatcher registry.
-    pub fn adapter_init(
-        ctx: Context<AdapterInit>,
-        args: AdapterInitArgs,
-    ) -> Result<()> {
+    pub fn adapter_init(ctx: Context<AdapterInit>, args: AdapterInitArgs) -> Result<()> {
         AdapterInit::adapter_init(ctx, args)
     }
-    
+
     // Routes a USDC deposit to the specified adapter via CPI.
     ///
     /// Validates that the adapter is active, then forwards the call
     /// to the adapter program using the standardized `adapter_deposit`
     /// discriminator. All protocol-specific accounts are passed
     /// through `remaining_accounts`.
-    pub fn deposit(
-        ctx: Context<Deposit>,
-        args: DepositArgs,
-    ) -> Result<()> {
+    pub fn deposit(ctx: Context<Deposit>, args: DepositArgs) -> Result<()> {
         Deposit::deposit(ctx, args)
     }
-    
+
     /// Routes a USDC withdrawal from the specified adapter via CPI.
     ///
     /// Validates that the adapter is active, then forwards the call
     /// to the adapter program using the standardized `adapter_withdraw`
     /// discriminator. All protocol-specific accounts are passed
     /// through `remaining_accounts`.
-    pub fn withdraw(
-        ctx: Context<Withdraw>,
-        args: WithdrawArgs,
-    ) -> Result<()> {
+    pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> Result<()> {
         Withdraw::withdraw(ctx, args)
     }
 

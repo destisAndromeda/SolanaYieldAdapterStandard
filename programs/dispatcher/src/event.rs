@@ -19,5 +19,5 @@ pub struct ToggleEvent {
     pub authority: Pubkey,
     pub adapter: Pubkey,
     pub program_id: Pubkey,
-    pub is_active: bool,
+    pub status: u8,
 }

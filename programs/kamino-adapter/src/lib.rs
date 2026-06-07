@@ -1,12 +1,12 @@
-pub mod event;
-pub mod error;
 pub mod constants;
+pub mod error;
+pub mod event;
 pub mod instructions;
 
 use anchor_lang::prelude::*;
 
-pub use event::*;
 pub use constants::*;
+pub use event::*;
 pub use instructions::*;
 
 declare_id!("BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT");
@@ -24,10 +24,7 @@ pub mod kamino_adapter {
     /// - `3` — `deposit_and_withdraw` (remaining `extra_data` bytes are forwarded as args)
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
-    pub fn adapter_deposit(
-        ctx: Context<AdapterDeposit>,
-        args: AdapterDepositArgs,
-    ) -> Result<()> {
+    pub fn adapter_deposit(ctx: Context<AdapterDeposit>, args: AdapterDepositArgs) -> Result<()> {
         AdapterDeposit::adapter_deposit(ctx, args)
     }
 

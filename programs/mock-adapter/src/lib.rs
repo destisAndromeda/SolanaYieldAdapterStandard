@@ -1,18 +1,17 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program_error::ProgramError;
+use yield_adapter_interface::{
+    set_return_u64, ADAPTER_DEPOSIT_DISCRIMINATOR, ADAPTER_WITHDRAW_DISCRIMINATOR,
+};
 
 declare_id!("3ChHEmV3NhvmtzLXPDY62aJizN4tiBGapzpmUKwxj6cV");
-
-const ADAPTER_DEPOSIT_DISCRIMINATOR: [u8; 8] =
-    [190, 207, 72, 186, 232, 106, 46, 72];
-const ADAPTER_WITHDRAW_DISCRIMINATOR: [u8; 8] =
-    [121, 55, 72, 46, 185, 100, 173, 236];
 
 #[program]
 pub mod mock_adapter {
     use super::*;
 
     pub fn adapter_current_value(_ctx: Context<AdapterCurrentValue>) -> Result<()> {
+        set_return_u64(0);
         Ok(())
     }
 

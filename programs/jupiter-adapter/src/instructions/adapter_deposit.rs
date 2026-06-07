@@ -1,10 +1,10 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::instruction::{AccountMeta, Instruction};
 use anchor_lang::solana_program::program::invoke;
-use anchor_lang::solana_program::instruction::{ Instruction, AccountMeta };
 
-use crate::event::*;
-use crate::error::*;
 use crate::constants::*;
+use crate::error::*;
+use crate::event::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct AdapterDepositArgs {
@@ -20,9 +20,7 @@ pub struct AdapterDeposit<'info> {
 
 impl AdapterDeposit<'_> {
     fn validate(&self, args: &AdapterDepositArgs) -> Result<()> {
-        let Self {
-            authority,            
-        } = self;
+        let Self { authority } = self;
 
         require_keys_neq!(
             authority.key(),
@@ -30,25 +28,19 @@ impl AdapterDeposit<'_> {
             AdapterError::InvalidAccount,
         );
 
-        require!(
-            !args.extra_data.is_empty(),
-            AdapterError::InvalidArgs,
-        );
+        require!(!args.extra_data.is_empty(), AdapterError::InvalidArgs,);
 
         Ok(())
     }
 
     #[access_control(ctx.accounts.validate(&args))]
-    pub fn adapter_deposit(
-        ctx: Context<Self>,
-        args: AdapterDepositArgs,
-    ) -> Result<()> {
+    pub fn adapter_deposit(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
         // Zero index contain function id for matching
         match args.extra_data[0] {
             0 => {
-                // The name must match the name of the actual instruction being called 
+                // The name must match the name of the actual instruction being called
                 Self::deposit_collateral_for_borrows(ctx, args)?;
-            },
+            }
             _ => return err!(AdapterError::UnknownFunction),
         }
 
@@ -66,7 +58,8 @@ impl AdapterDeposit<'_> {
         data.extend_from_slice(&amount.to_le_bytes());
         data.extend_from_slice(extra_data);
 
-        let accounts: Vec<AccountMeta> = ctx.remaining_accounts
+        let accounts: Vec<AccountMeta> = ctx
+            .remaining_accounts
             .iter()
             .map(|incoming| AccountMeta {
                 pubkey: incoming.key(),
@@ -85,7 +78,7 @@ impl AdapterDeposit<'_> {
 
         invoke(&instruction, ctx.remaining_accounts)?;
 
-        emit!( AdapterDepositEvent {
+        emit!(AdapterDepositEvent {
             authority: ctx.accounts.authority.key(),
             program_id,
             amount,
@@ -94,14 +87,11 @@ impl AdapterDeposit<'_> {
         Ok(())
     }
 
-    fn deposit_collateral_for_borrows(
-        ctx: Context<Self>,
-        args: AdapterDepositArgs,
-    ) -> Result<()> {
+    fn deposit_collateral_for_borrows(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
         Self::build_and_invoke(
             ctx,
             &DEPOSIT_COLLATERAL_FOR_BORROWS_DISCRIMINATOR,
-            args.amount, 
+            args.amount,
             &[],
         )
     }

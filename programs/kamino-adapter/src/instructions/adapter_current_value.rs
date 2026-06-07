@@ -2,8 +2,9 @@ use anchor_lang::prelude::*;
 use bytemuck::from_bytes;
 use klend_interface::state::Reserve;
 
-use crate::event::*;
 use crate::constants::*;
+use crate::event::*;
+use yield_adapter_interface::set_return_u64;
 
 #[derive(Accounts)]
 pub struct AdapterCurrentValue<'info> {
@@ -11,7 +12,7 @@ pub struct AdapterCurrentValue<'info> {
     pub authority: Signer<'info>,
 }
 
-impl AdapterCurrentValue<'_> { 
+impl AdapterCurrentValue<'_> {
     pub fn adapter_current_value(ctx: Context<AdapterCurrentValue>) -> Result<()> {
         let reserve_info = &ctx.remaining_accounts[0];
         let data = reserve_info.try_borrow_data()?;
@@ -19,10 +20,13 @@ impl AdapterCurrentValue<'_> {
         // Skip 8-byte Anchor discriminator
         let reserve: &Reserve = from_bytes(&data[8..]);
 
-        emit!( AdapterCurrentValueEvent {
+        let current_value = reserve.available_liquidity();
+        set_return_u64(current_value);
+
+        emit!(AdapterCurrentValueEvent {
             authority: ctx.accounts.authority.key(),
             program_id: PROGRAM_ID,
-            current_value: reserve.available_liquidity(),
+            current_value,
         });
 
         Ok(())

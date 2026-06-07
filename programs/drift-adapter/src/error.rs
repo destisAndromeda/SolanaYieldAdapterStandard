@@ -5,9 +5,9 @@ pub enum AdapterError {
     #[msg("Unknown Function")] // 6000
     UnknownFunction,
 
-    #[msg("Invalid Account")]  // 6001
+    #[msg("Invalid Account")] // 6001
     InvalidAccount,
 
-    #[msg("Invalid Args")]     // 6002
-    InvalidArgs
+    #[msg("Invalid Args")] // 6002
+    InvalidArgs,
 }

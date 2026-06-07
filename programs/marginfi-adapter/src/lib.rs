@@ -1,12 +1,12 @@
-pub mod event;
-pub mod error;
 pub mod constants;
+pub mod error;
+pub mod event;
 pub mod instructions;
 
 use anchor_lang::prelude::*;
 
-pub use event::*;
 pub use constants::*;
+pub use event::*;
 pub use instructions::*;
 
 declare_id!("43vGkNHfLML24Df9xCJddmwsx1mbje34yVsH13bqnbny");
@@ -21,10 +21,7 @@ pub mod marginfi_adapter {
     /// - `0` — `lending_account_deposit` (remaining `extra_data` bytes = Option<bool> deposit_up_to_limit)
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
-    pub fn adapter_deposit(
-        ctx: Context<AdapterDeposit>,
-        args: AdapterDepositArgs,
-    ) -> Result<()> {
+    pub fn adapter_deposit(ctx: Context<AdapterDeposit>, args: AdapterDepositArgs) -> Result<()> {
         AdapterDeposit::adapter_deposit(ctx, args)
     }
 
@@ -48,9 +45,7 @@ pub mod marginfi_adapter {
     /// from the `Bank` account. Can be simulated off-chain at no cost.
     ///
     /// `remaining_accounts[0]` — MarginFi MarginfiAccount.
-    pub fn adapter_current_value(
-        ctx: Context<AdapterCurrentValue>,
-    ) -> Result<()> {
+    pub fn adapter_current_value(ctx: Context<AdapterCurrentValue>) -> Result<()> {
         AdapterCurrentValue::adapter_current_value(ctx)
     }
 }

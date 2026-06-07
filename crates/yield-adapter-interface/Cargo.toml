@@ -1,0 +1,18 @@
+[package]
+name = "yield-adapter-interface"
+version = "0.1.0"
+description = "Shared Solana Yield Adapter Standard interface types"
+edition = "2021"
+
+[lib]
+name = "yield_adapter_interface"
+
+[features]
+default = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = "1.0.2"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }

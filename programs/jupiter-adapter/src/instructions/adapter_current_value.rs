@@ -1,6 +1,7 @@
-use anchor_lang::prelude::*;
-use crate::event::*;
 use crate::constants::*;
+use crate::event::*;
+use anchor_lang::prelude::*;
+use yield_adapter_interface::set_return_u64;
 
 #[derive(Accounts)]
 pub struct AdapterCurrentValue<'info> {
@@ -16,11 +17,11 @@ impl AdapterCurrentValue<'_> {
         // owner(32) + pool(32) + custody(32) + open_time(8) + update_time(8)
         // + borrow_size(16) + cumulative_compounded_interest_snapshot(16) = 144
         // locked_collateral starts at offset 152
-        let locked_collateral = u64::from_le_bytes(
-            data[152..160].try_into().unwrap()
-        );
+        let locked_collateral = u64::from_le_bytes(data[152..160].try_into().unwrap());
 
-        emit!( AdapterCurrentValueEvent {
+        set_return_u64(locked_collateral);
+
+        emit!(AdapterCurrentValueEvent {
             authority: ctx.accounts.authority.key(),
             program_id: PROGRAM_ID,
             current_value: locked_collateral,

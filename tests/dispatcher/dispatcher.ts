@@ -3,6 +3,10 @@ import { AnchorError } from "@anchor-lang/core";
 import { assert } from "chai";
 import {
   EXTRA_DATA_MAX_LEN,
+  ADAPTER_STATUS_ACTIVE,
+  ADAPTER_STATUS_PAUSED,
+  PROTOCOL_ID_KAMINO_USDC,
+  USDC_MINT,
   activeAdapterPda,
   adapterAuthority,
   airdrop,
@@ -75,7 +79,9 @@ describe("adapter_init", () => {
         .adapterInit({
           authority: strayAuthority.publicKey,
           programId: mockAdapterProgram.programId,
-          isActive: true,
+          supportedMint: USDC_MINT,
+          protocolId: PROTOCOL_ID_KAMINO_USDC,
+          status: ADAPTER_STATUS_ACTIVE,
         })
         .accounts({
           initializer: unauthorized.publicKey,
@@ -105,7 +111,9 @@ describe("adapter_init", () => {
       .adapterInit({
         authority: adapterAuthority.publicKey,
         programId: mockAdapterProgram.programId,
-        isActive: true,
+        supportedMint: USDC_MINT,
+        protocolId: PROTOCOL_ID_KAMINO_USDC,
+        status: ADAPTER_STATUS_ACTIVE,
       })
       .accounts({
         initializer: provider.wallet.publicKey,
@@ -119,15 +127,19 @@ describe("adapter_init", () => {
 
     assert.isTrue(adapter.authority.equals(adapterAuthority.publicKey));
     assert.isTrue(adapter.programId.equals(mockAdapterProgram.programId));
-    assert.strictEqual(adapter.isActive, true);
+    assert.isTrue(adapter.supportedMint.equals(USDC_MINT));
+    assert.strictEqual(adapter.protocolId, PROTOCOL_ID_KAMINO_USDC);
+    assert.strictEqual(adapter.status, ADAPTER_STATUS_ACTIVE);
   });
 
-  it("happy: stores is_active = false correctly", async () => {
+  it("happy: stores paused status correctly", async () => {
     await dispatcherProgram.methods
       .adapterInit({
         authority: inactiveAdapterAuthority.publicKey,
         programId: mockAdapterProgram.programId,
-        isActive: false,
+        supportedMint: USDC_MINT,
+        protocolId: PROTOCOL_ID_KAMINO_USDC,
+        status: ADAPTER_STATUS_PAUSED,
       })
       .accounts({
         initializer: provider.wallet.publicKey,
@@ -141,7 +153,9 @@ describe("adapter_init", () => {
 
     assert.isTrue(adapter.authority.equals(inactiveAdapterAuthority.publicKey));
     assert.isTrue(adapter.programId.equals(mockAdapterProgram.programId));
-    assert.strictEqual(adapter.isActive, false);
+    assert.isTrue(adapter.supportedMint.equals(USDC_MINT));
+    assert.strictEqual(adapter.protocolId, PROTOCOL_ID_KAMINO_USDC);
+    assert.strictEqual(adapter.status, ADAPTER_STATUS_PAUSED);
   });
 
   it("error: calling twice with same seeds fails with account already in use", async () => {
@@ -150,7 +164,9 @@ describe("adapter_init", () => {
         .adapterInit({
           authority: adapterAuthority.publicKey,
           programId: mockAdapterProgram.programId,
-          isActive: true,
+          supportedMint: USDC_MINT,
+          protocolId: PROTOCOL_ID_KAMINO_USDC,
+          status: ADAPTER_STATUS_ACTIVE,
         })
         .accounts({
           initializer: provider.wallet.publicKey,
@@ -172,7 +188,9 @@ describe("toggle_adapter", () => {
       .adapterInit({
         authority: toggleAdapterAuthority.publicKey,
         programId: mockAdapterProgram.programId,
-        isActive: true,
+        supportedMint: USDC_MINT,
+        protocolId: PROTOCOL_ID_KAMINO_USDC,
+        status: ADAPTER_STATUS_ACTIVE,
       })
       .accounts({
         initializer: provider.wallet.publicKey,
@@ -183,7 +201,7 @@ describe("toggle_adapter", () => {
       .rpc();
   });
 
-  it("happy: authority toggles is_active true to false", async () => {
+  it("happy: authority toggles active status to paused", async () => {
     const txSig = await dispatcherProgram.methods
       .toggleAdapter()
       .accounts({
@@ -194,7 +212,7 @@ describe("toggle_adapter", () => {
       .rpc();
 
     const adapter = await dispatcherProgram.account.adapter.fetch(toggleAdapterPda);
-    assert.strictEqual(adapter.isActive, false);
+    assert.strictEqual(adapter.status, ADAPTER_STATUS_PAUSED);
 
     const events = await parseDispatcherEvents(txSig);
     const toggleEvent = events.find((event) => event.name === "toggleEvent");
@@ -202,10 +220,10 @@ describe("toggle_adapter", () => {
     assert.isTrue(toggleEvent!.data.authority.equals(toggleAdapterAuthority.publicKey));
     assert.isTrue(toggleEvent!.data.adapter.equals(toggleAdapterPda));
     assert.isTrue(toggleEvent!.data.programId.equals(mockAdapterProgram.programId));
-    assert.strictEqual(toggleEvent!.data.isActive, false);
+    assert.strictEqual(toggleEvent!.data.status, ADAPTER_STATUS_PAUSED);
   });
 
-  it("happy: second toggle flips is_active back to true", async () => {
+  it("happy: second toggle flips paused status back to active", async () => {
     const txSig = await dispatcherProgram.methods
       .toggleAdapter()
       .accounts({
@@ -216,12 +234,12 @@ describe("toggle_adapter", () => {
       .rpc();
 
     const adapter = await dispatcherProgram.account.adapter.fetch(toggleAdapterPda);
-    assert.strictEqual(adapter.isActive, true);
+    assert.strictEqual(adapter.status, ADAPTER_STATUS_ACTIVE);
 
     const events = await parseDispatcherEvents(txSig);
     const toggleEvent = events.find((event) => event.name === "toggleEvent");
     assert.isDefined(toggleEvent);
-    assert.strictEqual(toggleEvent!.data.isActive, true);
+    assert.strictEqual(toggleEvent!.data.status, ADAPTER_STATUS_ACTIVE);
   });
 
   it("error: wrong authority returns Unauthorized", async () => {
