@@ -19,7 +19,4 @@ cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 ./tests/dispatcher/dispatcher.ts"
-
-[hooks]
-post_build = "cargo build-sbf --manifest-path programs/dispatcher/Cargo.toml --features testing"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 ./tests/dispatcher/*.test.ts"

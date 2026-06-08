@@ -8,7 +8,6 @@ use yield_adapter_interface::set_return_u64;
 
 #[derive(Accounts)]
 pub struct AdapterCurrentValue<'info> {
-    #[account(mut)]
     pub authority: Signer<'info>,
 }
 

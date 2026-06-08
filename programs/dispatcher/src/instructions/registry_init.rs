@@ -4,7 +4,7 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 
 #[cfg(not(feature = "testing"))]
-pub const INITIALIZER: Pubkey = pubkey!("GtmrJehR49tXwFh7W4x2kGy61czbEboYSkHQDJw7Ggeb");
+pub const INITIALIZER: Pubkey = pubkey!("GAe1b8H1eUQhGuwAEJKstXLFdpaoHp9voszu1uw46Htm");
 
 #[cfg(feature = "testing")]
 pub const INITIALIZER: Pubkey = pubkey!("GAe1b8H1eUQhGuwAEJKstXLFdpaoHp9voszu1uw46Htm");

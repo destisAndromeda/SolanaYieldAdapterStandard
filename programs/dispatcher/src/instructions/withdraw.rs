@@ -25,7 +25,7 @@ pub struct Withdraw<'info> {
     pub adapter: Account<'info, Adapter>,
 }
 
-impl Withdraw<'_> {
+impl<'info> Withdraw<'info> {
     fn validate(&self, args: &WithdrawArgs) -> Result<()> {
         let Self { adapter, .. } = self;
 
@@ -38,7 +38,7 @@ impl Withdraw<'_> {
     }
 
     #[access_control(ctx.accounts.validate(&args))]
-    pub fn withdraw(ctx: Context<Self>, args: WithdrawArgs) -> Result<()> {
+    pub fn withdraw(ctx: Context<'info, Self>, args: WithdrawArgs) -> Result<()> {
         let program_id = ctx.accounts.adapter.program_id;
 
         // Borsh-serialize the args: 8 bytes for u64 amount + 4 bytes length prefix + data for Vec
@@ -47,15 +47,13 @@ impl Withdraw<'_> {
         data.extend_from_slice(&ADAPTER_WITHDRAW_DISCRIMINATOR);
         data.extend_from_slice(&serialized_args);
 
-        let accounts: Vec<AccountMeta> = ctx
-            .remaining_accounts
-            .iter()
-            .map(|incoming| AccountMeta {
-                pubkey: incoming.key(),
-                is_signer: incoming.is_signer,
-                is_writable: incoming.is_writable,
-            })
-            .collect();
+        let mut accounts: Vec<AccountMeta> = Vec::with_capacity(1 + ctx.remaining_accounts.len());
+        accounts.push(AccountMeta::new_readonly(ctx.accounts.signer.key(), true));
+        accounts.extend(ctx.remaining_accounts.iter().map(|incoming| AccountMeta {
+            pubkey: incoming.key(),
+            is_signer: incoming.is_signer,
+            is_writable: incoming.is_writable,
+        }));
 
         let instruction = Instruction {
             program_id,
@@ -63,7 +61,11 @@ impl Withdraw<'_> {
             data,
         };
 
-        invoke(&instruction, ctx.remaining_accounts)?;
+        let mut account_infos: Vec<AccountInfo<'info>> = Vec::with_capacity(1 + ctx.remaining_accounts.len());
+        account_infos.push(ctx.accounts.signer.to_account_info());
+        account_infos.extend(ctx.remaining_accounts.iter().cloned());
+
+        invoke(&instruction, &account_infos)?;
 
         emit!(WithdrawEvent {
             authority: ctx.accounts.signer.key(),

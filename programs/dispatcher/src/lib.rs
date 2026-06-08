@@ -37,7 +37,7 @@ pub mod dispatcher {
     /// to the adapter program using the standardized `adapter_deposit`
     /// discriminator. All protocol-specific accounts are passed
     /// through `remaining_accounts`.
-    pub fn deposit(ctx: Context<Deposit>, args: DepositArgs) -> Result<()> {
+    pub fn deposit<'info>(ctx: Context<'info, Deposit<'info>>, args: DepositArgs) -> Result<()> {
         Deposit::deposit(ctx, args)
     }
 
@@ -47,7 +47,7 @@ pub mod dispatcher {
     /// to the adapter program using the standardized `adapter_withdraw`
     /// discriminator. All protocol-specific accounts are passed
     /// through `remaining_accounts`.
-    pub fn withdraw(ctx: Context<Withdraw>, args: WithdrawArgs) -> Result<()> {
+    pub fn withdraw<'info>(ctx: Context<'info, Withdraw<'info>>, args: WithdrawArgs) -> Result<()> {
         Withdraw::withdraw(ctx, args)
     }
 
@@ -56,7 +56,7 @@ pub mod dispatcher {
     /// Returns the total USDC value including accrued interest via `msg!`.
     /// This instruction can be simulated off-chain at no cost using
     /// `simulateTransaction` to read the current position without paying fees.
-    pub fn current_value(ctx: Context<CurrentValue>) -> Result<()> {
+    pub fn current_value<'info>(ctx: Context<'info, CurrentValue<'info>>) -> Result<()> {
         CurrentValue::current_value(ctx)
     }
     
