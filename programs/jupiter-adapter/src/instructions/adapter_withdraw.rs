@@ -19,7 +19,7 @@ pub struct AdapterWithdraw<'info> {
 }
 
 impl AdapterWithdraw<'_> {
-    fn validate(&self, args: &AdapterWithdrawArgs) -> Result<()> {
+    fn validate(&self, ctx: &Context<Self>, args: &AdapterWithdrawArgs) -> Result<()> {
         let Self { authority } = self;
 
         require_keys_neq!(
@@ -28,20 +28,23 @@ impl AdapterWithdraw<'_> {
             AdapterError::InvalidAccount,
         );
 
+        require!(
+            ctx.remaining_accounts.len() == 14,
+            AdapterError::InvalidAccount,
+        );
+
         require!(!args.extra_data.is_empty(), AdapterError::InvalidArgs,);
 
         Ok(())
     }
 
-    #[access_control(ctx.accounts.validate(&args))]
+    #[access_control(ctx.accounts.validate(&ctx, &args))]
     pub fn adapter_withdraw(ctx: Context<Self>, args: AdapterWithdrawArgs) -> Result<()> {
         // Zero index contain function id for matching
         match args.extra_data[0] {
-            0 => {
-                // The name must match the name of the actual instruction being called
-                Self::withdraw_collateral_for_borrows(ctx, args)?;
-            }
-
+            // The name must match the name of the actual instruction being called
+            0 => Self::withdraw_collateral_for_borrows(ctx, args)?,
+            1 => Self::remove_liquidity(ctx, args)?,
             _ => return err!(AdapterError::UnknownFunction),
         }
 
@@ -97,6 +100,18 @@ impl AdapterWithdraw<'_> {
             &WITHDRAW_COLLATERAL_FOR_BORROWS_DISCRIMINATOR,
             args.amount,
             &[],
+        )
+    }
+
+    fn remove_liquidity(
+        ctx: Context<Self>,
+        args: AdapterWithdrawArgs,
+    ) -> Result<()> {
+        Self::build_and_invoke(
+            ctx,
+            &REMOVE_LIQUIDITY,
+            args.amount,
+            &args.extra_data[1..],
         )
     }
 }

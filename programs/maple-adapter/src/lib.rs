@@ -12,7 +12,7 @@ pub use instructions::*;
 declare_id!("7A1CFrXTEw96vdtsYPG1h5vhXbFCszaipfavL1XhgQKL");
 
 #[program]
-pub mod marginfi_adapter {
+pub mod maple_adapter {
     use super::*;
 
     /// Submits a Maple Syrup deposit request through Chainlink CCIP.

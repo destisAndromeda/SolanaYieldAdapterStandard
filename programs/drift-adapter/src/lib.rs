@@ -12,7 +12,7 @@ pub use instructions::*;
 declare_id!("EojJcwUUuTuHyTJDyFjUjSxHbZLBuqJt7KPpBR6rVKZb");
 
 #[program]
-pub mod marginfi_adapter {
+pub mod drift_adapter {
     use super::*;
 
     /// Routes a USDC deposit to the appropriate Drift instruction via CPI.

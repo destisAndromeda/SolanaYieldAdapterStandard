@@ -37,11 +37,10 @@ impl AdapterWithdraw<'_> {
     pub fn adapter_withdraw(ctx: Context<Self>, args: AdapterWithdrawArgs) -> Result<()> {
         // Zero index contain function id for matching
         match args.extra_data[0] {
-            0 => {
-                // The name must match the name of the actual instruction being called
-                Self::withdraw(ctx, args)?;
-            }
-
+            // The name must match the name of the actual instruction being called
+            0 => Self::withdraw(ctx, args)?,
+            1 => Self::request_remove_insurance_fund_stake(ctx, args)?,
+            2 => Self::remove_insurance_fund_stake(ctx, args)?,
             _ => return err!(AdapterError::UnknownFunction),
         }
 
@@ -50,15 +49,9 @@ impl AdapterWithdraw<'_> {
 
     fn build_and_invoke(
         ctx: Context<Self>,
-        discriminator: &[u8],
+        data: Vec<u8>,
         amount: u64,
-        extra_data: &[u8],
     ) -> Result<()> {
-        let mut data = Vec::with_capacity(16);
-        data.extend_from_slice(discriminator);
-        data.extend_from_slice(&amount.to_le_bytes());
-        data.extend_from_slice(extra_data);
-
         let accounts: Vec<AccountMeta> = ctx
             .remaining_accounts
             .iter()
@@ -89,11 +82,35 @@ impl AdapterWithdraw<'_> {
     }
 
     fn withdraw(ctx: Context<Self>, args: AdapterWithdrawArgs) -> Result<()> {
-        Self::build_and_invoke(
-            ctx,
-            &WITHDRAW_DISCRIMINATOR,
-            args.amount,
-            &args.extra_data[1..],
-        )
+        let mut data = Vec::with_capacity(16 + args.extra_data.len());
+        data.extend_from_slice(&WITHDRAW);
+        data.extend_from_slice(&args.extra_data[1..3]);
+        data.extend_from_slice(&args.amount.to_le_bytes());
+        data.extend_from_slice(&args.extra_data[3..]);
+        
+        Self::build_and_invoke(ctx, data, args.amount)?;
+
+        Ok(())
+    }
+
+    fn request_remove_insurance_fund_stake(ctx: Context<Self>, args: AdapterWithdrawArgs) -> Result<()> {
+        let mut data = Vec::with_capacity(16 + args.extra_data.len());
+        data.extend_from_slice(&REQUEST_REMOVE_INSURANCE_FUND_STAKE);
+        data.extend_from_slice(&args.extra_data[1..3]);
+        data.extend_from_slice(&args.amount.to_le_bytes());
+
+        Self::build_and_invoke(ctx, data, args.amount)?;
+
+        Ok(())
+    }
+
+    fn remove_insurance_fund_stake(ctx: Context<Self>, args: AdapterWithdrawArgs) -> Result<()> {
+        let mut data = Vec::with_capacity(16 + args.extra_data.len());
+        data.extend_from_slice(&REMOVE_INSURANCE_FUND_STAKE);
+        data.extend_from_slice(&args.extra_data[1..3]);
+
+        Self::build_and_invoke(ctx, data, 0)?;
+
+        Ok(())
     }
 }

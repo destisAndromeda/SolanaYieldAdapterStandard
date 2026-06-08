@@ -19,7 +19,7 @@ pub struct AdapterDeposit<'info> {
 }
 
 impl AdapterDeposit<'_> {
-    fn validate(&self, args: &AdapterDepositArgs) -> Result<()> {
+    fn validate(&self, ctx: &Context<Self>, args: &AdapterDepositArgs) -> Result<()> {
         let Self { authority } = self;
 
         require_keys_neq!(
@@ -28,19 +28,23 @@ impl AdapterDeposit<'_> {
             AdapterError::InvalidAccount,
         );
 
+        require!(
+            ctx.remaining_accounts.len() == 14,
+            AdapterError::InvalidAccount,
+        );
+
         require!(!args.extra_data.is_empty(), AdapterError::InvalidArgs,);
 
         Ok(())
     }
 
-    #[access_control(ctx.accounts.validate(&args))]
+    #[access_control(ctx.accounts.validate(&ctx, &args))]
     pub fn adapter_deposit(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
         // Zero index contain function id for matching
         match args.extra_data[0] {
-            0 => {
-                // The name must match the name of the actual instruction being called
-                Self::deposit_collateral_for_borrows(ctx, args)?;
-            }
+            // The name must match the name of the actual instruction being called
+            0 => Self::deposit_collateral_for_borrows(ctx, args)?,
+            1 => Self::add_liquidity2(ctx, args)?,
             _ => return err!(AdapterError::UnknownFunction),
         }
 
@@ -94,5 +98,12 @@ impl AdapterDeposit<'_> {
             args.amount,
             &[],
         )
+    }
+
+    fn add_liquidity2(
+        ctx: Context<Self>,
+        args: AdapterDepositArgs,
+    ) -> Result<()> {
+        Self::build_and_invoke(ctx, &ADD_LIQUIDITY2, args.amount, &args.extra_data[1..])
     }
 }

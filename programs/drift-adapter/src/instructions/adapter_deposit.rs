@@ -40,24 +40,22 @@ impl AdapterDeposit<'_> {
             0 => {
                 // The name must match the name of the actual instruction being called
                 Self::deposit(ctx, args)?;
-            }
+            },
+            1 => Self::add_insurance_fund_stake(ctx, args)?,
+            2 => Self::initialize_insurance_fund_stake(ctx, args)?,
             _ => return err!(AdapterError::UnknownFunction),
         }
+
+
 
         Ok(())
     }
 
     fn build_and_invoke(
         ctx: Context<Self>,
-        discriminator: &[u8],
+        data: Vec<u8>,
         amount: u64,
-        extra_data: &[u8],
     ) -> Result<()> {
-        let mut data = Vec::with_capacity(16 + extra_data.len());
-        data.extend_from_slice(discriminator);
-        data.extend_from_slice(&amount.to_le_bytes());
-        data.extend_from_slice(extra_data);
-
         let accounts: Vec<AccountMeta> = ctx
             .remaining_accounts
             .iter()
@@ -87,12 +85,36 @@ impl AdapterDeposit<'_> {
         Ok(())
     }
 
-    fn deposit(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
-        Self::build_and_invoke(
-            ctx,
-            &DEPOSIT_DISCRIMINATOR,
-            args.amount,
-            &args.extra_data[1..],
-        )
+    fn deposit(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {        
+        let mut data = Vec::with_capacity(16 + args.extra_data.len());
+        data.extend_from_slice(&DEPOSIT);
+        data.extend_from_slice(&args.extra_data[1..3]);
+        data.extend_from_slice(&args.amount.to_le_bytes());
+        data.extend_from_slice(&args.extra_data[3..]);
+        
+        Self::build_and_invoke(ctx, data, args.amount)?;
+
+        Ok(())
+    }
+
+    fn add_insurance_fund_stake(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
+        let mut data = Vec::with_capacity(16 + args.extra_data.len());
+        data.extend_from_slice(&ADD_INSURANCE_FUND_STAKE);
+        data.extend_from_slice(&args.extra_data[1..]);
+        data.extend_from_slice(&args.amount.to_le_bytes());
+
+        Self::build_and_invoke(ctx, data, args.amount)?;
+
+        Ok(())
+    }
+
+    fn initialize_insurance_fund_stake(ctx: Context<Self>, args: AdapterDepositArgs) -> Result<()> {
+        let mut data = Vec::with_capacity(16 + args.extra_data.len());
+        data.extend_from_slice(&INITIALIZE_INSURANCE_FUND_STAKE);
+        data.extend_from_slice(&args.extra_data[1..]);
+
+        Self::build_and_invoke(ctx, data, 0)?;
+
+        Ok(())
     }
 }
