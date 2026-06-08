@@ -90,7 +90,7 @@ impl AdapterWithdraw<'_> {
 
         invoke(&instruction, ctx.remaining_accounts)?;
 
-        emit!(AdapterDepositEvent {
+        emit!(AdapterWithdrawEvent {
             authority: ctx.accounts.authority.key(),
             program_id,
             amount,

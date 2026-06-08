@@ -12,6 +12,8 @@ pub const ADAPTER_WITHDRAW_DISCRIMINATOR: [u8; 8] = {
     [121, 55, 72, 46, 185, 100, 173, 236]
 };
 
+pub mod layout;
+
 pub const ADAPTER_CURRENT_VALUE_DISCRIMINATOR: [u8; 8] = {
     // sha256("global:adapter_current_value")[..8]
     [67, 200, 59, 238, 163, 138, 170, 179]
@@ -78,6 +80,28 @@ pub fn read_return_u64() -> Result<u64> {
     Ok(u64::from_le_bytes(value))
 }
 
+#[macro_export]
+macro_rules! account_offset {
+    ($base:expr $(, $size:expr)* $(,)?) => {
+        $base $(+ $size)*
+    };
+}
+
+#[macro_export]
+macro_rules! define_account_offsets {
+    (
+        $layout_name:ident {
+            $($field:ident : $offset:expr),* $(,)?
+        }
+    ) => {
+        pub mod $layout_name {
+            $(
+                pub const $field: usize = $offset;
+            )*
+        }
+    };
+}
+
 #[error_code]
 pub enum YieldAdapterInterfaceError {
     #[msg("Missing return data")]
@@ -85,4 +109,13 @@ pub enum YieldAdapterInterfaceError {
 
     #[msg("Invalid return data")]
     InvalidReturnData,
+
+    #[msg("Account data is too short")]
+    AccountDataTooShort,
+
+    #[msg("Invalid account data")]
+    InvalidAccountData,
+
+    #[msg("Offset overflow")]
+    OffsetOverflow,
 }

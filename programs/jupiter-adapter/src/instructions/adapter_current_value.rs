@@ -1,7 +1,13 @@
 use crate::constants::*;
 use crate::event::*;
 use anchor_lang::prelude::*;
-use yield_adapter_interface::set_return_u64;
+use yield_adapter_interface::{define_account_offsets, layout::read_u64_le, set_return_u64};
+
+define_account_offsets! {
+    jupiter_borrow_position {
+        LOCKED_COLLATERAL: yield_adapter_interface::account_offset!(8, 32, 32, 32, 8, 8, 16, 16),
+    }
+}
 
 #[derive(Accounts)]
 pub struct AdapterCurrentValue<'info> {
@@ -13,11 +19,10 @@ impl AdapterCurrentValue<'_> {
         let account_info = &ctx.remaining_accounts[0];
         let data = account_info.try_borrow_data()?;
 
-        // BorrowPosition layout (after 8-byte discriminator):
-        // owner(32) + pool(32) + custody(32) + open_time(8) + update_time(8)
-        // + borrow_size(16) + cumulative_compounded_interest_snapshot(16) = 144
-        // locked_collateral starts at offset 152
-        let locked_collateral = u64::from_le_bytes(data[152..160].try_into().unwrap());
+        // remaining_accounts[0] is a BorrowPosition account.
+        // Reading locked_collateral from raw account data.
+        // The returned value is raw collateral amount, not a supported-mint valuation.
+        let locked_collateral = read_u64_le(&data, jupiter_borrow_position::LOCKED_COLLATERAL)?;
 
         set_return_u64(locked_collateral);
 

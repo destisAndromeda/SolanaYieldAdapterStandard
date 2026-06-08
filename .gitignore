@@ -7,3 +7,4 @@ test-ledger
 .yarn
 .surfpool
 script.sh
+test-output.log
