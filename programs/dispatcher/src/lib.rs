@@ -11,7 +11,7 @@ pub use event::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU");
+declare_id!("8yq3ahdnSz4GBcVWtohNF5V7MxnVmk6umN4TNhJX182n");
 
 #[program]
 pub mod dispatcher {

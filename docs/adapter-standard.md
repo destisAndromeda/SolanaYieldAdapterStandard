@@ -126,7 +126,7 @@ The adapter logic that builds a protocol-specific instruction from the standard 
 
 | Network | Program    | Address                                        |
 | ------- | ---------- | ---------------------------------------------- |
-| Devnet  | Dispatcher | `2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU` |
+| Devnet  | Dispatcher | `8yq3ahdnSz4GBcVWtohNF5V7MxnVmk6umN4TNhJX182n` |
 
 The same dispatcher program id is also declared in `Anchor.toml` for localnet.
 
@@ -1279,7 +1279,7 @@ To implement a new adapter:
 
 | Name                            | Public Key                                     |
 | ------------------------------- | ---------------------------------------------- |
-| Dispatcher devnet / localnet    | `2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU` |
+| Dispatcher devnet / localnet    | `8yq3ahdnSz4GBcVWtohNF5V7MxnVmk6umN4TNhJX182n` |
 | Mock Adapter                    | `3ChHEmV3NhvmtzLXPDY62aJizN4tiBGapzpmUKwxj6cV` |
 | Kamino Adapter                  | `BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT` |
 | MarginFi Adapter                | `43vGkNHfLML24Df9xCJddmwsx1mbje34yVsH13bqnbny` |

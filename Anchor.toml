@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-dispatcher = "2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU"
+dispatcher = "8yq3ahdnSz4GBcVWtohNF5V7MxnVmk6umN4TNhJX182n"
 drift-adapter = "EojJcwUUuTuHyTJDyFjUjSxHbZLBuqJt7KPpBR6rVKZb"
 jupiter-adapter = "CqNUZykVkiQsGTW8rQRSm4cm2DtXgMCmNRvWfgHV9nB2"
 kamino-adapter = "BaxHrSyiFkoS4on2HmmEBCAL7BwMfXnZarpHNx6V3GrT"
