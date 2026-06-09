@@ -22,7 +22,7 @@ Supported reference adapters:
 
 | Network | Program    | Address                                        |
 | ------- | ---------- | ---------------------------------------------- |
-| Devnet  | Dispatcher | `2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU` |
+| Devnet  | Dispatcher | `8yq3ahdnSz4GBcVWtohNF5V7MxnVmk6umN4TNhJX182n` |
 
 ### Reference Program IDs (localnet)
 
