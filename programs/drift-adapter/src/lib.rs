@@ -19,6 +19,8 @@ pub mod drift_adapter {
     ///
     /// The first byte of `extra_data` selects the target instruction:
     /// - `0` — `deposit` (extra_data[1..3] = market_index: u16, extra_data[3] = reduce_only: bool)
+    /// - `1` — `add_insurance_fund_stake`
+    /// - `2` — `initialize_insurance_fund_stake`
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
     pub fn adapter_deposit(ctx: Context<AdapterDeposit>, args: AdapterDepositArgs) -> Result<()> {
@@ -29,6 +31,8 @@ pub mod drift_adapter {
     ///
     /// The first byte of `extra_data` selects the target instruction:
     /// - `0` — `withdraw` (extra_data[1..3] = market_index: u16, extra_data[3] = reduce_only: bool)
+    /// - `1` — `request_remove_insurance_fund_stake`
+    /// - `2` — `remove_insurance_fund_stake`
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
     pub fn adapter_withdraw(
@@ -38,10 +42,11 @@ pub mod drift_adapter {
         AdapterWithdraw::adapter_withdraw(ctx, args)
     }
 
-    /// Returns the current USDC spot balance from the user's Drift account.
+    /// Returns the current protocol-native scaled balance from the user's Drift account.
     ///
     /// Reads `User.spot_positions[0].scaled_balance` directly via zero-copy
     /// deserialization and emits an `AdapterCurrentValueEvent`.
+    /// This value is a Drift-scaled balance, not a supported-mint USDC amount.
     /// Can be simulated off-chain at no cost via `simulateTransaction`.
     ///
     /// `remaining_accounts[0]` — Drift User account.

@@ -53,7 +53,8 @@ pub mod dispatcher {
 
     /// Queries the current value of a user's position in the specified adapter.
     ///
-    /// Returns the total USDC value including accrued interest via `msg!`.
+    /// Forwards the call to the adapter's `adapter_current_value` entrypoint.
+    /// The returned `u64` is adapter-specific and is emitted via return data.
     /// This instruction can be simulated off-chain at no cost using
     /// `simulateTransaction` to read the current position without paying fees.
     pub fn current_value<'info>(ctx: Context<'info, CurrentValue<'info>>) -> Result<()> {

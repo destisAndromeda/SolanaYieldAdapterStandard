@@ -19,6 +19,7 @@ pub mod jupiter_adapter {
     ///
     /// The first byte of `extra_data` selects the target instruction:
     /// - `0` — `depositCollateralForBorrows`
+    /// - `1` — `addLiquidity2` (remaining bytes are forwarded as CPI args)
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
     pub fn adapter_deposit(ctx: Context<AdapterDeposit>, args: AdapterDepositArgs) -> Result<()> {
@@ -29,6 +30,7 @@ pub mod jupiter_adapter {
     ///
     /// The first byte of `extra_data` selects the target instruction:
     /// - `0` — `withdrawCollateralForBorrows`
+    /// - `1` — `removeLiquidity` (remaining bytes are forwarded as CPI args)
     ///
     /// All protocol accounts are passed through `remaining_accounts`.
     pub fn adapter_withdraw(
@@ -38,13 +40,13 @@ pub mod jupiter_adapter {
         AdapterWithdraw::adapter_withdraw(ctx, args)
     }
 
-    /// Returns the current asset shares of the user's MarginFi position.
+    /// Returns the raw locked collateral amount from a Jupiter BorrowPosition account.
     ///
-    /// Reads `MarginfiAccount` directly via zero-copy deserialization and logs
-    /// raw `asset_shares`. For exact USDC amount, multiply by the exchange rate
-    /// from the `Bank` account. Can be simulated off-chain at no cost.
+    /// Reads the `BorrowPosition` account data directly and returns the
+    /// `locked_collateral` field as a raw `u64`.
+    /// This value is protocol-native and may not be denominated in supported-mint units.
     ///
-    /// `remaining_accounts[0]` — MarginFi MarginfiAccount.
+    /// `remaining_accounts[0]` — Jupiter BorrowPosition account.
     pub fn adapter_current_value(ctx: Context<AdapterCurrentValue>) -> Result<()> {
         AdapterCurrentValue::adapter_current_value(ctx)
     }
