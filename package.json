@@ -8,7 +8,8 @@
     "test:fork:kamino": "bash tests/scripts/test-fork-kamino.sh",
     "test:fork:drift": "bash tests/scripts/test-fork-drift.sh",
     "test:fork:maple": "bash tests/scripts/test-fork-maple.sh",
-    "test:fork:marginfi": "bash tests/scripts/test-fork-marginfi.sh"
+    "test:fork:marginfi": "bash tests/scripts/test-fork-marginfi.sh",
+    "test:fork:jupiter": "bash tests/scripts/test-fork-jupiter.sh"
   },
   "dependencies": {
     "@anchor-lang/core": "^1.0.2",
