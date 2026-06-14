@@ -2,7 +2,7 @@
 
 A reference implementation of a protocol-agnostic Solana yield adapter standard. This repo provides a dispatcher, on-chain registry, reusable adapter interface crate, five reference adapters, a mock adapter for unit testing, and adapter-specific mainnet-fork wiring tests.
 
-Devnet Dispatcher: `2mYCSzV1J6XKZmd8n1NWcr2NuRYqVtP6tFC7YWPj6ZXU`
+Devnet Dispatcher: `8yq3ahdnSz4GBcVWtohNF5V7MxnVmk6umN4TNhJX182n`
 
 Supported reference adapters:
 
